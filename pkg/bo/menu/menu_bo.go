@@ -22,7 +22,7 @@ CREATE TABLE `w_menu` (
 type menuDef struct {
 	TableName string
 }
-type Menu struct {
+type MenuBO struct {
 	Id       int64
 	UserId   int64
 	Title    string
@@ -31,13 +31,13 @@ type Menu struct {
 	UpdateTs int64
 }
 
-func (def *Menu) NewMenuDef() *menuDef {
+func (def *MenuBO) NewMenuDef() *menuDef {
 	return &menuDef{
 		TableName: "w_menu",
 	}
 }
 
-func (menu *Menu) Insert() (err error) {
+func (menu *MenuBO) Insert() (err error) {
 	def := menu.NewMenuDef()
 	if menu.CreateTs == 0 {
 		menu.CreateTs = time.Now().Unix()
@@ -69,3 +69,5 @@ func (menu *Menu) Insert() (err error) {
 
 	return nil
 }
+
+
