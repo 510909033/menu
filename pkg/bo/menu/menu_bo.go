@@ -1,11 +1,11 @@
-package bo_menu
+package menu
 
 import (
 	"fmt"
-	"time"
 
-	"baotian0506.com/app/menu/applog"
+	"baotian0506.com/app/menu/bgf_bo"
 )
+
 /*
 
 CREATE TABLE `w_menu` (
@@ -19,55 +19,37 @@ CREATE TABLE `w_menu` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='菜单表';
 
 */
-type menuDef struct {
+
+type menuBO struct {
 	TableName string
-}
-type MenuBO struct {
-	Id       int64
-	UserId   int64
-	Title    string
-	Extra    string
-	CreateTs int64
-	UpdateTs int64
-}
+	DBName    string
+	bgfBO     bgf_bo.ModelMethod
 
-func (def *MenuBO) NewMenuDef() *menuDef {
-	return &menuDef{
-		TableName: "w_menu",
-	}
+	Id       int    `pk:"" column_name:"id" json:"id"`
+	UserId   int    `column_name:"user_id" json:"user_id"`
+	Title    string `column_name:"title" json:"title"`
+	Extra    string `column_name:"extra" json:"extra"`
+	CreateTs int64  `column_name:"create_ts" json:"create_ts"`
+	UpdateTs int64  `column_name:"update_ts" json:"update_ts"`
 }
 
-func (menu *MenuBO) Insert() (err error) {
-	def := menu.NewMenuDef()
-	if menu.CreateTs == 0 {
-		menu.CreateTs = time.Now().Unix()
-	}
-
-	if menu.UpdateTs == 0 {
-		menu.UpdateTs = time.Now().Unix()
-	}
-	query := fmt.Sprintf("INSERT INTO %s (user_id,title,extra,create_ts,update_ts) values(?,?,?,?,?)", def.TableName)
-	args := []interface{}{
-		menu.UserId,
-		menu.Title,
-		menu.Extra,
-		menu.CreateTs,
-		menu.UpdateTs,
-	}
-	sqlResult, err := db.Exec(query, args...)
-
-	if err != nil {
-		applog.LogError.Printf("err=%v", err)
-		return err
-	}
-
-	id, err := sqlResult.LastInsertId()
-	if err != nil {
-		applog.LogError.Printf("err=%v", err)
-	}
+func NewMenuBO(id int) *menuBO {
+	menu := &menuBO{}
 	menu.Id = id
-
-	return nil
+	menu.TableName = "w_menu"
+	menu.DBName = "menu"
+	menu.bgfBO = &bgf_bo.ModelMethod{
+		M: &menu,
+	}
+	menu.Load()
+	return menu
 }
 
+func init() {
+	fmt.Println("menu_bo init")
+	bgf_bo.Register(NewMenuBO(0))
+}
 
+func (bo *menuBO) Insert() {
+	bo.bgfBO.Insert()
+}

@@ -19,6 +19,9 @@ type myHandler struct {
 	action map[string]reflect.Value
 }
 
+func init() {
+	fmt.Println("main init")
+}
 func main() {
 
 	h := &myHandler{

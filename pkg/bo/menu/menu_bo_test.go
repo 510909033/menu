@@ -1,4 +1,4 @@
-package bo_menu
+package menu
 
 import (
 	"testing"
@@ -9,9 +9,9 @@ import (
 
 func TestMyUnit1(t *testing.T) {
 
-	menu := &MenuBO{}
+	menu := NewMenuBO(0)
 
-	menu.UserId = time.Now().Unix()
+	menu.UserId = int(time.Now().Unix())
 	menu.Title = time.Now().Format(common.TIME_FORMAT_YMDHIS)
 
 	if menu.Insert() == nil {
@@ -20,6 +20,28 @@ func TestMyUnit1(t *testing.T) {
 		t.Fatal("the result is wrong")
 	}
 
+}
+
+func TestMyUnit2(t *testing.T) {
+
+	menu := NewMenuBO(0)
+
+	menu.UserId = int(time.Now().Unix())
+	menu.Title = time.Now().Format(common.TIME_FORMAT_YMDHIS)
+
+	if menu.Insert() == nil {
+		t.Log("the result is ok")
+	} else {
+		t.Fatal("the result is wrong")
+	}
+
+}
+
+func TestMyUnit3(t *testing.T) {
+
+	menu := NewMenuBO(35)
+
+	_ = menu
 }
 
 //func TestMyUnit1V2(t *testing.T) {

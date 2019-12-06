@@ -1,4 +1,4 @@
-package bo_menu
+package menu
 
 import (
 	"database/sql"
