@@ -20,7 +20,7 @@ type myHandler struct {
 }
 
 func init() {
-	fmt.Println("main init")
+	applog.LogInfo.Printf("main init")
 }
 func main() {
 
@@ -30,14 +30,10 @@ func main() {
 	h.registerController(&api.MenuController{})
 
 	err := http.ListenAndServe("0.0.0.0:6060", h)
-	fmt.Println(err)
+	applog.LogError.Printf("%v", err)
 }
 
 func (this *myHandler) registerController(controller interface{}) {
-
-	if s, err := getKey("menu1123/save"); true {
-		fmt.Println(s, err)
-	}
 
 	t := reflect.TypeOf(controller)
 	v := reflect.ValueOf(controller)
@@ -58,7 +54,7 @@ func (this *myHandler) registerController(controller interface{}) {
 		this.action[key] = v.Method(i)
 	}
 
-	fmt.Printf("%v\n", m)
+	//	fmt.Printf("%v\n", m)
 
 }
 

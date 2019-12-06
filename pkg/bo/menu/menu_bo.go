@@ -22,9 +22,7 @@ CREATE TABLE `w_menu` (
 */
 
 type menuBO struct {
-	TableName string
-	DBName    string
-	bgfBO     *bgf_bo.ModelMethod
+	bgfBO *bgf_bo.ModelMethod
 
 	Id       int    `pk:"" column_name:"id" json:"id"`
 	UserId   int    `column_name:"user_id" json:"user_id"`
@@ -37,11 +35,12 @@ type menuBO struct {
 func NewMenuBO(id int) *menuBO {
 	menu := &menuBO{}
 	menu.Id = id
-	menu.TableName = "w_menu"
-	menu.DBName = "menu"
+
 	menu.bgfBO = &bgf_bo.ModelMethod{
-		M: menu,
-		V: reflect.ValueOf(menu),
+		M:         menu,
+		V:         reflect.ValueOf(menu),
+		TableName: menu.GetTableName(),
+		DBName:    menu.GetDBName(),
 	}
 	menu.bgfBO.Load()
 	return menu

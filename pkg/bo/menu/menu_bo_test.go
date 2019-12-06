@@ -4,6 +4,7 @@ import (
 	"testing"
 	"time"
 
+	"baotian0506.com/app/menu/applog"
 	"baotian0506.com/app/menu/pkg/common"
 )
 
@@ -37,12 +38,14 @@ func TestMyUnit1(t *testing.T) {
 
 //}
 
-//func TestMyUnit3(t *testing.T) {
+func TestMyUnit3(t *testing.T) {
 
-//	menu := NewMenuBO(35)
+	menu := NewMenuBO(51)
+	applog.LogInfo.Printf("%v", menu)
+	applog.LogInfo.Printf("%s", menu.Title)
 
-//	_ = menu
-//}
+	_ = menu
+}
 
 //func TestMyUnit1V2(t *testing.T) {
 //	sum := my_unit1(1, 2)

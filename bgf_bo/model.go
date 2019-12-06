@@ -16,7 +16,7 @@ var db = &sql.DB{}
 func init() {
 	var err error
 	db, err = sql.Open("mysql", "root:root@/menu")
-	fmt.Println("init")
+	applog.LogInfo.Printf("init")
 	if err != nil {
 		applog.LogError.Printf("open db fail, %v", err)
 		panic(err)
@@ -55,8 +55,6 @@ func (modelMethod *ModelMethod) Load() (err error) {
 	prepareList := make([]string, 0)
 	dataInterface := make([]interface{}, len(fl))
 
-	fmt.Println(len(fl))
-
 	for _, f := range fl {
 		fieldStrList = append(fieldStrList, f.ColumnName)
 		prepareList = append(prepareList, "?")
@@ -67,13 +65,25 @@ func (modelMethod *ModelMethod) Load() (err error) {
 		strings.Join(fieldStrList, ", "),
 		modelMethod.TableName,
 		modelMethod.V.Elem().FieldByName("Id").Interface())
-	sqlRow := db.QueryRow(query)
 
-	err = sqlRow.Scan(dataInterface...)
-	fmt.Println(dataInterface)
+	applog.LogInfo.Printf("query=%s", query)
+
+	var sqlRow *sql.Rows
+	sqlRow, err = db.Query(query)
 	if err != nil {
-		return err
+		applog.LogError.Printf("Query fail, err=%v", err)
+		return
 	}
+	defer sqlRow.Close()
+	for sqlRow.Next() {
+		err = sqlRow.Scan(dataInterface...)
+		if err != nil {
+			applog.LogError.Printf("Scan fail, err=%v", err)
+			return
+		}
+	}
+
+	applog.LogInfo.Printf("%v", dataInterface)
 
 	return nil
 }
@@ -102,7 +112,6 @@ func (modelMethod *ModelMethod) Insert() (err error) {
 	v2 := make([]string, 0)
 	v3 := make([]interface{}, 0)
 
-	//	fmt.Println(menu)
 	v := reflect.ValueOf(menu)
 
 	//	v = v.Elem()
@@ -114,8 +123,6 @@ func (modelMethod *ModelMethod) Insert() (err error) {
 		}
 		v1 = append(v1, field.ColumnName)
 		v2 = append(v2, "?")
-		fmt.Println("field.StructFieldName" + field.StructFieldName)
-		fmt.Println(v.Elem().FieldByName(field.StructFieldName))
 		v3 = append(v3, v.Elem().FieldByName(field.StructFieldName).Interface())
 	}
 
