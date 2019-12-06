@@ -2,6 +2,7 @@ package menu
 
 import (
 	"fmt"
+	"reflect"
 
 	"baotian0506.com/app/menu/bgf_bo"
 )
@@ -23,7 +24,7 @@ CREATE TABLE `w_menu` (
 type menuBO struct {
 	TableName string
 	DBName    string
-	bgfBO     bgf_bo.ModelMethod
+	bgfBO     *bgf_bo.ModelMethod
 
 	Id       int    `pk:"" column_name:"id" json:"id"`
 	UserId   int    `column_name:"user_id" json:"user_id"`
@@ -39,17 +40,26 @@ func NewMenuBO(id int) *menuBO {
 	menu.TableName = "w_menu"
 	menu.DBName = "menu"
 	menu.bgfBO = &bgf_bo.ModelMethod{
-		M: &menu,
+		M: menu,
+		V: reflect.ValueOf(menu),
 	}
-	menu.Load()
+	menu.bgfBO.Load()
 	return menu
 }
 
+func (menu *menuBO) GetTableName() string {
+	return "w_menu"
+}
+
+func (menu *menuBO) GetDBName() string {
+	return "menu"
+}
 func init() {
 	fmt.Println("menu_bo init")
+	//	a := &(NewMenuBO(0).bgfBO)
 	bgf_bo.Register(NewMenuBO(0))
 }
 
-func (bo *menuBO) Insert() {
-	bo.bgfBO.Insert()
+func (bo *menuBO) Insert() error {
+	return bo.bgfBO.Insert()
 }

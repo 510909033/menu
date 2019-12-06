@@ -29,7 +29,10 @@ type Model interface {
 }
 
 type ModelMethod struct {
-	M interface{}
+	M         interface{}
+	V         reflect.Value
+	TableName string
+	DBName    string
 }
 
 //func (menu *ModelMethod) GetDBName() string {
@@ -41,7 +44,7 @@ type ModelMethod struct {
 
 func (modelMethod *ModelMethod) Load() (err error) {
 
-	menu := modelMethod.M.(Model)
+	menu := (*modelMethod).M.(Model)
 	//	if menu.Id < 1 {
 	//		return nil
 	//	}
@@ -62,8 +65,8 @@ func (modelMethod *ModelMethod) Load() (err error) {
 
 	query := fmt.Sprintf("select %s from %s where id=%d limit 1",
 		strings.Join(fieldStrList, ", "),
-		menu.TableName,
-		menu.Id)
+		modelMethod.TableName,
+		modelMethod.V.Elem().FieldByName("Id").Interface())
 	sqlRow := db.QueryRow(query)
 
 	err = sqlRow.Scan(dataInterface...)
@@ -77,13 +80,15 @@ func (modelMethod *ModelMethod) Load() (err error) {
 
 func (modelMethod *ModelMethod) Insert() (err error) {
 
-	menu := modelMethod.M
-	if menu.CreateTs == 0 {
-		menu.CreateTs = time.Now().Unix()
+	menu := modelMethod.M.(Model)
+	if modelMethod.V.Elem().FieldByName("CreateTs").Interface().(int64) == 0 {
+		create_ts := reflect.ValueOf(time.Now().Unix())
+		modelMethod.V.Elem().FieldByName("CreateTs").Set(create_ts)
 	}
 
-	if menu.UpdateTs == 0 {
-		menu.UpdateTs = time.Now().Unix()
+	if modelMethod.V.Elem().FieldByName("UpdateTs").Interface().(int64) == 0 {
+		update_ts := reflect.ValueOf(time.Now().Unix())
+		modelMethod.V.Elem().FieldByName("UpdateTs").Set(update_ts)
 	}
 
 	fullName := GetFullName(menu)
@@ -98,7 +103,7 @@ func (modelMethod *ModelMethod) Insert() (err error) {
 	v3 := make([]interface{}, 0)
 
 	//	fmt.Println(menu)
-	v := reflect.ValueOf(*menu)
+	v := reflect.ValueOf(menu)
 
 	//	v = v.Elem()
 	//	t := v.Type().Elem()
@@ -110,8 +115,8 @@ func (modelMethod *ModelMethod) Insert() (err error) {
 		v1 = append(v1, field.ColumnName)
 		v2 = append(v2, "?")
 		fmt.Println("field.StructFieldName" + field.StructFieldName)
-		fmt.Println(v.FieldByName(field.StructFieldName))
-		v3 = append(v3, v.FieldByName(field.StructFieldName).Interface())
+		fmt.Println(v.Elem().FieldByName(field.StructFieldName))
+		v3 = append(v3, v.Elem().FieldByName(field.StructFieldName).Interface())
 	}
 
 	query := fmt.Sprintf("INSERT INTO %s (%s) values(%s)",
@@ -128,7 +133,8 @@ func (modelMethod *ModelMethod) Insert() (err error) {
 	if err != nil {
 		applog.LogError.Printf("err=%v", err)
 	}
-	menu.Id = int(id)
+
+	modelMethod.V.Elem().FieldByName("Id").Set(reflect.ValueOf(int(id)))
 
 	return nil
 }

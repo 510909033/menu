@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"reflect"
 	"sync"
+
+	"baotian0506.com/app/menu/applog"
 )
 
 var ModelMap = make(map[string][]*Field)
@@ -74,6 +76,7 @@ func getFieldList(m Model) []*Field {
 }
 
 func GetFullName(m Model) string {
-	fmt.Println("%s_%s", m.GetDBName(), m.GetTableName())
+	applog.LogError.Printf("%s_%s\n", m.GetDBName(), m.GetTableName())
+
 	return fmt.Sprintf("%s_%s", m.GetDBName(), m.GetTableName())
 }

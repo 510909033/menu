@@ -22,27 +22,27 @@ func TestMyUnit1(t *testing.T) {
 
 }
 
-func TestMyUnit2(t *testing.T) {
+//func TestMyUnit2(t *testing.T) {
 
-	menu := NewMenuBO(0)
+//	menu := NewMenuBO(0)
 
-	menu.UserId = int(time.Now().Unix())
-	menu.Title = time.Now().Format(common.TIME_FORMAT_YMDHIS)
+//	menu.UserId = int(time.Now().Unix())
+//	menu.Title = time.Now().Format(common.TIME_FORMAT_YMDHIS)
 
-	if menu.Insert() == nil {
-		t.Log("the result is ok")
-	} else {
-		t.Fatal("the result is wrong")
-	}
+//	if menu.Insert() == nil {
+//		t.Log("the result is ok")
+//	} else {
+//		t.Fatal("the result is wrong")
+//	}
 
-}
+//}
 
-func TestMyUnit3(t *testing.T) {
+//func TestMyUnit3(t *testing.T) {
 
-	menu := NewMenuBO(35)
+//	menu := NewMenuBO(35)
 
-	_ = menu
-}
+//	_ = menu
+//}
 
 //func TestMyUnit1V2(t *testing.T) {
 //	sum := my_unit1(1, 2)
