@@ -9,6 +9,9 @@ import (
 )
 
 var ModelMap = make(map[string][]*Field)
+
+var ModelDbColumnMapStructField = make(map[string]string) // menu_w_menu_user_id => UserId
+
 var muModelLock sync.Mutex
 
 func Register(m Model) {
@@ -53,6 +56,9 @@ func registerModel(m Model) {
 		if _, ok := tag.Lookup("pk"); ok {
 			field.IsPk = true
 		}
+
+		k := GetFullName(m) + "_" + field.ColumnName
+		ModelDbColumnMapStructField[k] = field.StructFieldName
 
 		fieldList = append(fieldList, field)
 	}

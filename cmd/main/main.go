@@ -28,8 +28,9 @@ func main() {
 		action: make(map[string]reflect.Value),
 	}
 	h.registerController(&api.MenuController{})
+	h.registerController(&api.WechatController{})
 
-	err := http.ListenAndServe("0.0.0.0:6060", h)
+	err := http.ListenAndServe("0.0.0.0:9678", h)
 	applog.LogError.Printf("%v", err)
 }
 
@@ -109,6 +110,9 @@ func (this *myHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		s = append(s, reflect.ValueOf(baseContext))
 		v.Call(s)
 
+		if len(baseContext.Response) == 0 {
+			return
+		}
 		b, err := json.Marshal(baseContext.Response)
 		if err != nil {
 			w.Write([]byte("Marshal fail"))

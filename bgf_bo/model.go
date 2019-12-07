@@ -33,6 +33,7 @@ type ModelMethod struct {
 	V         reflect.Value
 	TableName string
 	DBName    string
+	Def       map[string]string // [user_id]UserId
 }
 
 //func (menu *ModelMethod) GetDBName() string {
@@ -75,6 +76,22 @@ func (modelMethod *ModelMethod) Load() (err error) {
 		return
 	}
 	defer sqlRow.Close()
+
+	var columnsList []string
+
+	columnsList, err = sqlRow.Columns()
+	if err != nil {
+		return
+	}
+
+	for k, columnName := range columnsList {
+		kk := GetFullName(menu) + "_" + columnName
+		structColumnName := ModelDbColumnMapStructField[kk]
+
+		ptr := modelMethod.V.Elem().FieldByName(structColumnName).Addr().Interface()
+		dataInterface[k] = ptr
+	}
+
 	for sqlRow.Next() {
 		err = sqlRow.Scan(dataInterface...)
 		if err != nil {
@@ -144,4 +161,72 @@ func (modelMethod *ModelMethod) Insert() (err error) {
 	modelMethod.V.Elem().FieldByName("Id").Set(reflect.ValueOf(int(id)))
 
 	return nil
+}
+
+func (modelMethod *ModelMethod) Query() (ret []interface{}, err error) {
+
+	menu := (*modelMethod).M.(Model)
+	//	if menu.Id < 1 {
+	//		return nil
+	//	}
+
+	fl := getFieldList(menu)
+
+	fieldStrList := make([]string, 0)
+	prepareList := make([]string, 0)
+
+	dataInterface := make([]interface{}, len(fl))
+
+	for _, f := range fl {
+		fieldStrList = append(fieldStrList, f.ColumnName)
+		prepareList = append(prepareList, "?")
+
+	}
+
+	query := fmt.Sprintf("select %s from %s order by id desc",
+		strings.Join(fieldStrList, ", "),
+		modelMethod.TableName)
+
+	applog.LogInfo.Printf("query=%s", query)
+
+	var sqlRow *sql.Rows
+
+	sqlRow, err = db.Query(query)
+	if err != nil {
+		applog.LogError.Printf("Query fail, err=%v", err)
+		return
+	}
+	defer sqlRow.Close()
+
+	var columnsList []string
+
+	columnsList, err = sqlRow.Columns()
+	if err != nil {
+		return
+	}
+
+	for k, columnName := range columnsList {
+		kk := GetFullName(menu) + "_" + columnName
+		structColumnName := ModelDbColumnMapStructField[kk]
+
+		ptr := modelMethod.V.Elem().FieldByName(structColumnName).Addr().Interface()
+		dataInterface[k] = ptr
+	}
+
+	for sqlRow.Next() {
+		//		copyDataInterface :=dataInterface
+		err = sqlRow.Scan(dataInterface...)
+		if err != nil {
+			applog.LogError.Printf("Scan fail, err=%v", err)
+			return
+		}
+
+		a := modelMethod.V.Elem().Interface()
+
+		ret = append(ret, a)
+	}
+
+	applog.LogInfo.Printf("%v", dataInterface)
+
+	return
 }

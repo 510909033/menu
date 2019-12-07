@@ -21,7 +21,7 @@ CREATE TABLE `w_menu` (
 
 */
 
-type menuBO struct {
+type MenuBO struct {
 	bgfBO *bgf_bo.ModelMethod
 
 	Id       int    `pk:"" column_name:"id" json:"id"`
@@ -30,10 +30,13 @@ type menuBO struct {
 	Extra    string `column_name:"extra" json:"extra"`
 	CreateTs int64  `column_name:"create_ts" json:"create_ts"`
 	UpdateTs int64  `column_name:"update_ts" json:"update_ts"`
+
+	Page  int
+	Limit int
 }
 
-func NewMenuBO(id int) *menuBO {
-	menu := &menuBO{}
+func NewMenuBO(id int) *MenuBO {
+	menu := &MenuBO{}
 	menu.Id = id
 
 	menu.bgfBO = &bgf_bo.ModelMethod{
@@ -42,15 +45,17 @@ func NewMenuBO(id int) *menuBO {
 		TableName: menu.GetTableName(),
 		DBName:    menu.GetDBName(),
 	}
-	menu.bgfBO.Load()
+	if menu.Id > 1 {
+		menu.bgfBO.Load()
+	}
 	return menu
 }
 
-func (menu *menuBO) GetTableName() string {
+func (menu *MenuBO) GetTableName() string {
 	return "w_menu"
 }
 
-func (menu *menuBO) GetDBName() string {
+func (menu *MenuBO) GetDBName() string {
 	return "menu"
 }
 func init() {
@@ -59,6 +64,23 @@ func init() {
 	bgf_bo.Register(NewMenuBO(0))
 }
 
-func (bo *menuBO) Insert() error {
+func (bo *MenuBO) Insert() error {
 	return bo.bgfBO.Insert()
+}
+
+func (bo *MenuBO) Query() (retList []MenuBO, err error) {
+	var ret []interface{}
+
+	ret, err = bo.bgfBO.Query()
+
+	for _, v := range ret {
+		fmt.Printf("%v", v)
+
+		//		if _, b := v.Interface().(*MenuBO); true {
+		//			fmt.Println(b)
+		//		}
+
+		retList = append(retList, v.(MenuBO))
+	}
+	return
 }

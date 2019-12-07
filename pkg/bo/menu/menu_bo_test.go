@@ -40,9 +40,17 @@ func TestMyUnit1(t *testing.T) {
 
 func TestMyUnit3(t *testing.T) {
 
-	menu := NewMenuBO(51)
+	menu := NewMenuBO(3)
 	applog.LogInfo.Printf("%v", menu)
 	applog.LogInfo.Printf("%s", menu.Title)
+
+	_ = menu
+}
+
+func TestMyUnit4(t *testing.T) {
+
+	menu := NewMenuBO(3)
+	menu.Query()
 
 	_ = menu
 }
