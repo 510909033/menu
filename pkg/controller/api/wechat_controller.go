@@ -45,22 +45,6 @@ func (ctrl *WechatController) IndexAction(ctx *base.BaseContext) {
 		fmt.Println(err)
 		return
 	}
-	server.SetDebug(true)
-	fmt.Printf("openid:%s\n", server.GetOpenID())
-	if ret, err := server.GetAccessToken(); true {
-		fmt.Printf("GetAccessToken ret:%s\n", ret)
-		if err != nil {
-			fmt.Printf("GetAccessToken err:%v\n", err)
-		}
-	}
-	if ret, ret2, err := server.GetAuthrInfo(server.AppID); true {
-		if err != nil {
-			fmt.Printf("GetAuthrInfo err:%v\n", err)
-		} else {
-			fmt.Println(ret2.AccessToken, ret2.Appid)
-			fmt.Printf("GetAuthrInfo ret:%s\n", ret)
-		}
-	}
 
 	//发送回复的消息
 	server.Send()

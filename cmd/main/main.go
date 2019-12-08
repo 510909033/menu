@@ -24,13 +24,18 @@ func init() {
 }
 func main() {
 
+	http.Handle("/css/", http.FileServer(http.Dir("../../template")))
+	http.Handle("/js/", http.FileServer(http.Dir("template")))
+
 	h := &myHandler{
 		action: make(map[string]reflect.Value),
 	}
 	h.registerController(&api.MenuController{})
 	h.registerController(&api.WechatController{})
 
-	err := http.ListenAndServe("0.0.0.0:9678", h)
+	http.Handle("/", h)
+
+	err := http.ListenAndServe("0.0.0.0:9678", nil)
 	applog.LogError.Printf("%v", err)
 }
 
@@ -93,6 +98,9 @@ func getKey(path string) (string, error) {
 }
 
 func (this *myHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	if r.URL.Path == "/" {
+		r.URL.Path = "/wechat/index"
+	}
 	key, err := getKey(r.URL.Path)
 	if err != nil {
 		w.Write([]byte("fail getKey"))

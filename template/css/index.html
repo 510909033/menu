@@ -1,0 +1,98 @@
+
+<!DOCTYPE html>
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta charset="utf-8">
+	<meta name="title" content="Bootstrap可视化布局系统">
+	<meta name="description" content="Bootstrap可视化布局系统是一款可在线拖放排序、在线编辑的Bootstrap可视化编辑器，通过该工具你可以通过拖放的形式的实现在线编辑基于bootstrap的html模板，并可直接生成模板，生成的模板可以直接下载。">
+	<meta name="keywords" content="bootstrap在线编辑器,bootstrap在线设计,bootstrap可视化工具">
+
+	<!-- Le styles -->
+	<link href="//cdn.staticfile.org/twitter-bootstrap/3.0.1/css/bootstrap.min.css" rel="stylesheet">
+
+
+	<script type="text/javascript" src="//cdn.staticfile.org/jquery/2.0.0/jquery.min.js"></script>
+	<script type="text/javascript" src="//cdn.staticfile.org/twitter-bootstrap/3.0.1/js/bootstrap.min.js"></script>
+
+
+
+
+
+</head>
+
+<body >
+<div class="container">
+	<div class="row clearfix">
+		<div class="col-md-2 column">
+			<div class="list-group">
+				 <a href="#" class="list-group-item active">Home</a>
+				<div class="list-group-item" onclick="location.href='/ment/list';">
+					菜单列表
+				</div>
+				
+				<div class="list-group-item" onclick="location.href='/css/edit.html';">
+					添加菜单
+				</div>
+				
+				<div class="list-group-item">
+					<h4 class="list-group-item-heading">
+						List group item heading
+					</h4>
+					<p class="list-group-item-text">
+						...
+					</p>
+				</div>
+				<div class="list-group-item">
+					 <span class="badge">14</span> Help
+				</div> <a class="list-group-item active"> <span class="badge">14</span> Help</a>
+			</div>
+		</div>
+		<div class="col-md-10 column">
+			<table class="table">
+				<thead>
+					<tr>
+						<th>
+							ID
+						</th>
+						<th>
+							名称
+						</th>
+						<th>
+							创建时间
+						</th>
+						<th>
+							操作
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+					
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+
+<script>
+
+
+$.get("/menu/list", function(data) {
+	var str=""
+	
+	for (i in data["data"]["list"]) {
+	
+	str +="<tr><td>"+data["data"]["list"][i]["id"]+"</td><td>"+data["data"]["list"][i]["title"]+"</td><td>"+data["data"]["list"][i]["create_ts_format"]+"</td><td>Default</td></tr>"
+	}
+	$("tbody").html(str)
+},"json")
+
+
+
+
+
+
+</script>
+
+
+</body>
+</html>
