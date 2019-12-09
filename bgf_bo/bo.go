@@ -4,8 +4,6 @@ import (
 	"fmt"
 	"reflect"
 	"sync"
-
-	"baotian0506.com/app/menu/applog"
 )
 
 var ModelMap = make(map[string][]*Field)
@@ -16,6 +14,16 @@ var muModelLock sync.Mutex
 
 func Register(m Model) {
 	registerModel(m)
+}
+
+type PageLimit struct {
+	Page  int
+	Limit int
+}
+
+type Where struct {
+	ColumnName string
+	Value      interface{}
 }
 
 type Field struct {
@@ -82,7 +90,6 @@ func getFieldList(m Model) []*Field {
 }
 
 func GetFullName(m Model) string {
-	applog.LogError.Printf("%s_%s\n", m.GetDBName(), m.GetTableName())
-
+	//	applog.LogError.Printf("%s_%s\n", m.GetDBName(), m.GetTableName())
 	return fmt.Sprintf("%s_%s", m.GetDBName(), m.GetTableName())
 }

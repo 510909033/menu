@@ -1,58 +1,61 @@
 package menu
 
 import (
+	"fmt"
 	"testing"
 	"time"
 
 	"baotian0506.com/app/menu/applog"
+	"baotian0506.com/app/menu/bgf_bo"
 	"baotian0506.com/app/menu/pkg/common"
 )
 
-func TestMyUnit1(t *testing.T) {
-
+func TestInsertSuccess(t *testing.T) {
+	var err error
+	msg := ""
 	menu := NewMenuBO(0)
 
 	menu.UserId = int(time.Now().Unix())
 	menu.Title = time.Now().Format(common.TIME_FORMAT_YMDHIS)
 
-	if menu.Insert() == nil {
-		t.Log("the result is ok")
+	err = menu.Insert()
+	if err == nil {
+		msg = fmt.Sprintf("insert success, id=%d", menu.Id)
+		applog.LogInfo.Println(msg)
+		t.Log(msg)
 	} else {
-		t.Fatal("the result is wrong")
+		msg = fmt.Sprintf("insert fail, err=%v", err)
+		applog.LogInfo.Println(msg)
+		t.Fatal(msg)
 	}
 
 }
 
-//func TestMyUnit2(t *testing.T) {
-
-//	menu := NewMenuBO(0)
-
-//	menu.UserId = int(time.Now().Unix())
-//	menu.Title = time.Now().Format(common.TIME_FORMAT_YMDHIS)
-
-//	if menu.Insert() == nil {
-//		t.Log("the result is ok")
-//	} else {
-//		t.Fatal("the result is wrong")
-//	}
-
-//}
-
-func TestMyUnit3(t *testing.T) {
+func TestSelectByExistsId(t *testing.T) {
 
 	menu := NewMenuBO(3)
-	applog.LogInfo.Printf("%v", menu)
-	applog.LogInfo.Printf("%s", menu.Title)
-
-	_ = menu
+	if menu.IsNewRow() {
+		t.Fatal("TestSelectByExistsId , result IsNewRow")
+		return
+	}
+	t.Log("TestSelectByExistsId , success")
 }
 
-func TestMyUnit4(t *testing.T) {
+func TestQueryWhereField(t *testing.T) {
 
 	menu := NewMenuBO(3)
-	menu.Query()
-
-	_ = menu
+	where := "title = ?"
+	whereValue := make([]interface{}, 0)
+	whereValue = append(whereValue, "12345")
+	pageLimit := bgf_bo.PageLimit{
+		Page:  1,
+		Limit: 22,
+	}
+	if _, err := menu.Query(where, whereValue, pageLimit); err != nil {
+		t.Fatalf("TestQueryWhereField fail, err=%v", err)
+	} else {
+		t.Log("TestQueryWhereField , success")
+	}
 }
 
 //func TestMyUnit1V2(t *testing.T) {

@@ -31,8 +31,7 @@ type MenuBO struct {
 	CreateTs int64  `column_name:"create_ts" json:"create_ts"`
 	UpdateTs int64  `column_name:"update_ts" json:"update_ts"`
 
-	Page  int
-	Limit int
+	CreateTsFormat string `json:"create_ts_format"`
 }
 
 func NewMenuBO(id int) *MenuBO {
@@ -44,6 +43,7 @@ func NewMenuBO(id int) *MenuBO {
 		V:         reflect.ValueOf(menu),
 		TableName: menu.GetTableName(),
 		DBName:    menu.GetDBName(),
+		IsNewRow:  true,
 	}
 	if menu.Id > 1 {
 		menu.bgfBO.Load()
@@ -58,6 +58,10 @@ func (menu *MenuBO) GetTableName() string {
 func (menu *MenuBO) GetDBName() string {
 	return "menu"
 }
+func (menu *MenuBO) IsNewRow() bool {
+	return menu.bgfBO.IsNewRow
+}
+
 func init() {
 	fmt.Println("menu_bo init")
 	//	a := &(NewMenuBO(0).bgfBO)
@@ -68,18 +72,12 @@ func (bo *MenuBO) Insert() error {
 	return bo.bgfBO.Insert()
 }
 
-func (bo *MenuBO) Query() (retList []MenuBO, err error) {
+func (bo *MenuBO) Query(where string, whereValue []interface{}, pageLimit bgf_bo.PageLimit) (retList []MenuBO, err error) {
 	var ret []interface{}
 
-	ret, err = bo.bgfBO.Query()
+	ret, err = bo.bgfBO.Query(where, whereValue, pageLimit)
 
 	for _, v := range ret {
-		fmt.Printf("%v", v)
-
-		//		if _, b := v.Interface().(*MenuBO); true {
-		//			fmt.Println(b)
-		//		}
-
 		retList = append(retList, v.(MenuBO))
 	}
 	return

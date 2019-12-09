@@ -1,0 +1,40 @@
+<div class="col-md-10 column">
+	<table class="table">
+		<thead>
+			<tr>
+				<th>
+					ID
+				</th>
+				<th>
+					名称
+				</th>
+				<th>
+					创建时间
+				</th>
+				<th>
+					操作
+				</th>
+			</tr>
+		</thead>
+		<tbody>
+			
+		</tbody>
+	</table>
+</div>
+
+<script>
+$(function() {
+	getDataStart()
+});
+
+function getDataStart() {
+	$.get("/menu/list", function(data) {
+		var str="";
+		
+		for (i in data["data"]["list"]) {
+			str +="<tr><td>"+data["data"]["list"][i]["id"]+"</td><td>"+data["data"]["list"][i]["title"]+"</td><td>"+data["data"]["list"][i]["create_ts_format"]+"</td><td>Default</td></tr>";
+		}
+		$("tbody").html(str);
+	},"json");
+}
+</script>

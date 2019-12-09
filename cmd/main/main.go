@@ -24,7 +24,7 @@ func init() {
 }
 func main() {
 
-	http.Handle("/css/", http.FileServer(http.Dir("../../template")))
+	http.Handle("/default/", http.FileServer(http.Dir("../../template")))
 	http.Handle("/js/", http.FileServer(http.Dir("template")))
 
 	h := &myHandler{

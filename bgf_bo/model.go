@@ -8,17 +8,25 @@ import (
 	"time"
 
 	"baotian0506.com/app/menu/applog"
+	"baotian0506.com/app/menu/pkg/common"
 	_ "github.com/go-sql-driver/mysql"
 )
 
 var db = &sql.DB{}
 
 func init() {
-	var err error
-	db, err = sql.Open("mysql", "root:root@/menu")
 	applog.LogInfo.Printf("init")
+	var err error
+	var sqlResult sql.Result
+	db, err = sql.Open("mysql", "root:root@/menu")
 	if err != nil {
 		applog.LogError.Printf("open db fail, %v", err)
+		panic(err)
+	}
+	sqlResult, err = db.Exec("set names utf8mb4")
+	_ = sqlResult
+	if err != nil {
+		applog.LogError.Printf("set names utf8mb4 fail, %v", err)
 		panic(err)
 	}
 }
@@ -34,6 +42,7 @@ type ModelMethod struct {
 	TableName string
 	DBName    string
 	Def       map[string]string // [user_id]UserId
+	IsNewRow  bool
 }
 
 //func (menu *ModelMethod) GetDBName() string {
@@ -44,7 +53,7 @@ type ModelMethod struct {
 //}
 
 func (modelMethod *ModelMethod) Load() (err error) {
-
+	modelMethod.IsNewRow = true
 	menu := (*modelMethod).M.(Model)
 	//	if menu.Id < 1 {
 	//		return nil
@@ -98,9 +107,10 @@ func (modelMethod *ModelMethod) Load() (err error) {
 			applog.LogError.Printf("Scan fail, err=%v", err)
 			return
 		}
+		modelMethod.IsNewRow = false
 	}
 
-	applog.LogInfo.Printf("%v", dataInterface)
+	//	applog.LogInfo.Printf("%v", dataInterface)
 
 	return nil
 }
@@ -163,12 +173,9 @@ func (modelMethod *ModelMethod) Insert() (err error) {
 	return nil
 }
 
-func (modelMethod *ModelMethod) Query() (ret []interface{}, err error) {
+func (modelMethod *ModelMethod) Query(where string, whereValue []interface{}, limit PageLimit) (ret []interface{}, err error) {
 
 	menu := (*modelMethod).M.(Model)
-	//	if menu.Id < 1 {
-	//		return nil
-	//	}
 
 	fl := getFieldList(menu)
 
@@ -183,15 +190,42 @@ func (modelMethod *ModelMethod) Query() (ret []interface{}, err error) {
 
 	}
 
-	query := fmt.Sprintf("select %s from %s order by id desc",
+	if where != "" {
+		where = "where " + where
+	}
+
+	if limit.Page == 0 {
+		limit.Page = 1
+	}
+	if limit.Limit < 1 || limit.Limit > 1000 {
+		limit.Limit = 10
+	}
+
+	whereValue = append(whereValue, (limit.Page-1)*limit.Limit)
+	whereValue = append(whereValue, limit.Limit)
+
+	query := fmt.Sprintf("select %s from %s %s order by id desc limit ? , ?",
 		strings.Join(fieldStrList, ", "),
-		modelMethod.TableName)
+		modelMethod.TableName,
+		where)
 
 	applog.LogInfo.Printf("query=%s", query)
 
 	var sqlRow *sql.Rows
 
-	sqlRow, err = db.Query(query)
+	sqlRow, err = db.Query(query, whereValue...)
+
+	//debug sql
+	debugQueryList := strings.Split(query, "?")
+
+	for k, v := range debugQueryList {
+		if k > (len(whereValue) - 1) {
+			break
+		}
+		debugQueryList[k] = v + fmt.Sprintf("%s", whereValue[k])
+	}
+	applog.LogInfo.Printf("debug sql=%s", strings.Join(debugQueryList, " "))
+
 	if err != nil {
 		applog.LogError.Printf("Query fail, err=%v", err)
 		return
@@ -221,12 +255,17 @@ func (modelMethod *ModelMethod) Query() (ret []interface{}, err error) {
 			return
 		}
 
+		createTs := modelMethod.V.Elem().FieldByName("CreateTs").Interface().(int64)
+		createTsFormat := time.Unix(createTs, 0).Format(common.TIME_FORMAT_YMDHIS)
+
+		rv := reflect.ValueOf(createTsFormat)
+		modelMethod.V.Elem().FieldByName("CreateTsFormat").Set(rv)
 		a := modelMethod.V.Elem().Interface()
 
 		ret = append(ret, a)
 	}
 
-	applog.LogInfo.Printf("%v", dataInterface)
+	//	applog.LogInfo.Printf("%v", dataInterface)
 
 	return
 }
