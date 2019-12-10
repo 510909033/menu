@@ -64,12 +64,15 @@ func (menu *MenuBO) IsNewRow() bool {
 
 func init() {
 	fmt.Println("menu_bo init")
-	//	a := &(NewMenuBO(0).bgfBO)
 	bgf_bo.Register(NewMenuBO(0))
 }
 
 func (bo *MenuBO) Insert() error {
 	return bo.bgfBO.Insert()
+}
+
+func (bo *MenuBO) Save() error {
+	return bo.bgfBO.Save()
 }
 
 func (bo *MenuBO) Query(where string, whereValue []interface{}, pageLimit bgf_bo.PageLimit) (retList []MenuBO, err error) {

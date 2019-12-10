@@ -1,7 +1,9 @@
 package menu
 
 import (
+	"errors"
 	"fmt"
+	"reflect"
 	"testing"
 	"time"
 
@@ -9,6 +11,34 @@ import (
 	"baotian0506.com/app/menu/bgf_bo"
 	"baotian0506.com/app/menu/pkg/common"
 )
+
+func TestNewMenuBO(t *testing.T) {
+
+	err := errors.New("first error!")
+	err1 := fmt.Errorf("1111 \n%w", err)
+	err2 := fmt.Errorf("222 \n%w", err1)
+
+	fmt.Println(err2)
+	fmt.Println(errors.Unwrap(err2))
+	fmt.Println(err2)
+
+	menu := NewMenuBO(0)
+
+	v := reflect.ValueOf(menu)
+
+	for i := 0; i < v.Elem().NumField(); i++ {
+		fieldV := v.Elem().Field(i)
+
+		if v.Elem().Type().Field(i).PkgPath == "" {
+			applog.LogInfo.Println(v.Elem().Type().Field(i).Name)
+			applog.LogInfo.Println(fieldV.Interface())
+		}
+
+		//
+
+	}
+
+}
 
 func TestInsertSuccess(t *testing.T) {
 	var err error
@@ -56,6 +86,24 @@ func TestQueryWhereField(t *testing.T) {
 	} else {
 		t.Log("TestQueryWhereField , success")
 	}
+}
+
+func TestUpdateExistsId(t *testing.T) {
+	var err error
+	menu := NewMenuBO(3)
+	if menu.IsNewRow() {
+		t.Fatal("TestSelectByExistsId , result IsNewRow")
+		return
+	}
+	applog.LogInfo.Println(menu.Title)
+	menu.Title = "66666111"
+	err = menu.Save()
+	if err != nil {
+		t.Fatal("TestUpdateExistsId , fail")
+		return
+	}
+
+	t.Log("TestSelectByExistsId , success")
 }
 
 //func TestMyUnit1V2(t *testing.T) {

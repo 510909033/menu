@@ -60,7 +60,7 @@ func (ctrl *MenuController) SaveAction(ctx *base.BaseContext) {
 		}
 	}
 
-	err = menuBO.Insert()
+	err = menuBO.Save()
 	if err != nil {
 		ctx.Fail("保存失败", nil)
 		return

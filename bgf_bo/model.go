@@ -2,6 +2,7 @@ package bgf_bo
 
 import (
 	"database/sql"
+	"errors"
 	"fmt"
 	"reflect"
 	"strings"
@@ -268,4 +269,91 @@ func (modelMethod *ModelMethod) Query(where string, whereValue []interface{}, li
 	//	applog.LogInfo.Printf("%v", dataInterface)
 
 	return
+}
+
+func (modelMethod *ModelMethod) Update() (err error) {
+	//create_ts 不更新
+	menu := modelMethod.M.(Model)
+
+	update_ts := reflect.ValueOf(time.Now().Unix())
+	modelMethod.V.Elem().FieldByName("UpdateTs").Set(update_ts)
+
+	fullName := GetFullName(menu)
+
+	fieldList, okFieldList := ModelMap[fullName]
+	if !okFieldList {
+		panic("fullName get data fail, fullName:" + fullName)
+	}
+
+	v1 := make([]string, 0)      //字段
+	v3 := make([]interface{}, 0) //值
+
+	v := reflect.ValueOf(menu)
+
+	//	v = v.Elem()
+	//	t := v.Type().Elem()
+
+	for _, field := range fieldList {
+		if field.IsPk {
+			continue
+		}
+		if field.ColumnName == "create_ts" {
+			continue
+		}
+		v1 = append(v1, field.ColumnName+" = ?")
+
+		v3 = append(v3, v.Elem().FieldByName(field.StructFieldName).Interface())
+	}
+
+	query := fmt.Sprintf("update %s set %s where id = %d limit 1",
+		menu.GetTableName(),
+		strings.Join(v1, ", "),
+		v.Elem().FieldByName("Id").Interface())
+
+	//debug sql
+	debugQueryList := strings.Split(query, "?")
+
+	for k, v := range debugQueryList {
+		if k > (len(v3) - 1) {
+			break
+		}
+		debugQueryList[k] = v + fmt.Sprintf("%s", v3[k])
+	}
+	applog.LogInfo.Printf("debug sql=%s", strings.Join(debugQueryList, " "))
+
+	sqlResult, err := db.Exec(query, v3...)
+
+	if err != nil {
+		applog.LogError.Printf("err=%v", err)
+		return err
+	}
+
+	affected, err := sqlResult.RowsAffected()
+	if err != nil {
+		applog.LogError.Printf("err=%v", err)
+		return err
+	}
+
+	if affected != 1 {
+		err = errors.New("affected !=1")
+		applog.LogError.Printf("err=%v", err)
+		return err
+	}
+
+	return nil
+}
+
+func (modelMethod *ModelMethod) Save() (err error) {
+	var errRet error
+	if modelMethod.IsNewRow {
+		if err := modelMethod.Insert(); err != nil {
+			errRet = fmt.Errorf("save fail! %w", err)
+		}
+	} else {
+		//update
+		if err := modelMethod.Update(); err != nil {
+			errRet = fmt.Errorf("Update fail! %w", err)
+		}
+	}
+	return errRet
 }
