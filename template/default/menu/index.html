@@ -82,6 +82,17 @@ $.get("/default/menu/layout/"+layout+".html", function(data) {
 },"html")
 
 
+function showMsg(modal_id,data) {
+	$(".modal-title").html("提示信息");
+	$(".modal-body").html(data.msg);
+	
+	$(".modal-footer button[data-dismiss='modal']").click(function() {
+		if(data.data.redirect_url) {
+			location.href=data.data.redirect_url
+		}
+	});
+	$('#'+modal_id).modal('show');	
+}
 </script>
 
 

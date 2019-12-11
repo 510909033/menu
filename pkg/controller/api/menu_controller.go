@@ -66,7 +66,8 @@ func (ctrl *MenuController) SaveAction(ctx *base.BaseContext) {
 		return
 	}
 	ret["id"] = menuBO.Id
-	ctx.Success(nil, ret)
+	ret["redirect_url"] = "/default/menu/"
+	ctx.Success("编辑成功", ret)
 
 }
 

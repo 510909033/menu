@@ -15,6 +15,50 @@
 			</div>
 		</div>
 	</form>
+	
+	
+	
+	
+	
+	<div class="hide modal_position"></div>
+
+	
+	
+	
 </div>
+
+
+<script>
+
+$(function() {
+	
+	$.get("/default/menu/plugin/modal.html", function(data) {
+		$(".modal_position").replaceWith(data);
+	},'html');
+	
+	$("form").submit(function() {
+		var url=$("form").attr("action")
+		var modal_id="modal-container-415722"
+		$.ajax({
+			url:url,
+			data:$("form").serialize(),
+			mehtod:"get",
+			dataType:"json",
+			success:function(data) {
+				showMsg(modal_id,data);
+			},
+			complete:function(data) {
+				
+			},
+			beforeSend:function(xhr) {
+				
+			}
+		});
+		return false
+	});
+	
+});
+
+</script>
 
 		
