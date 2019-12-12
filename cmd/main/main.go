@@ -106,6 +106,7 @@ func (this *myHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("fail getKey"))
 		return
 	}
+	applog.LogInfo.Printf("r.Url.Path=%s", r.URL.Path)
 
 	if v, ok := this.action[key]; ok {
 
