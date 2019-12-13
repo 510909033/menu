@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"reflect"
 
+	"baotian0506.com/app/menu/applog"
 	"baotian0506.com/app/menu/bgf_bo"
 )
 
@@ -82,6 +83,14 @@ func (bo *MenuBO) Query(where string, whereValue []interface{}, pageLimit bgf_bo
 
 	for _, v := range ret {
 		retList = append(retList, v.(MenuBO))
+	}
+	return
+}
+
+func (bo *MenuBO) Count(where string, whereValue []interface{}) (count int64, err error) {
+	count, err = bo.bgfBO.Count(where, whereValue)
+	if err != nil {
+		applog.Log(err, applog.ERROR)
 	}
 	return
 }

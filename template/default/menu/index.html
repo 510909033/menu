@@ -9,12 +9,13 @@
 
 	<!-- Le styles -->
 	<link href="//cdn.staticfile.org/twitter-bootstrap/3.0.1/css/bootstrap.min.css" rel="stylesheet">
-
+<link href="/public/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" media="screen">
 
 	<script type="text/javascript" src="//cdn.staticfile.org/jquery/2.0.0/jquery.min.js"></script>
 	<script type="text/javascript" src="//cdn.staticfile.org/twitter-bootstrap/3.0.1/js/bootstrap.min.js"></script>
-
-
+<script type="text/javascript" src="/public/bootstrap-datetimepicker/js/bootstrap-datetimepicker.js" charset="UTF-8"></script>
+<script type="text/javascript" src="/public/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.fr.js" charset="UTF-8"></script>
+<!-- https://www.bootcss.com/p/bootstrap-datetimepicker/ -->
 
 
 
@@ -34,7 +35,14 @@
 					添加菜单
 				</div>
 				
-				<div class="list-group-item">
+				<div class="list-group-item" onclick="location.href='/default/menu/index.html?layout=history_menu_list';">
+					我的记录
+				</div>
+				<div class="list-group-item" onclick="location.href='/default/menu/index.html?layout=history_menu_edit';">
+					添加记录
+				</div>
+				
+				<div class="list-group-item hide">
 					<h4 class="list-group-item-heading">
 						List group item heading
 					</h4>
@@ -42,7 +50,7 @@
 						...
 					</p>
 				</div>
-				<div class="list-group-item">
+				<div class="list-group-item hide">
 					 <span class="badge">14</span> Help
 				</div> <a class="list-group-item active"> <span class="badge">14</span> Help</a>
 			</div>
@@ -93,8 +101,83 @@ function showMsg(modal_id,data) {
 	});
 	$('#'+modal_id).modal('show');	
 }
+
+
+
+// 设置指定url中param的值，返回处理后的url
+function set_url_param(url,param,value){
+	if(url.indexOf('?') != -1){  
+	        var p = new RegExp("([\\?|&]{1}"+param+")=[^&]*");
+			
+	        if(p.test(url)){
+				//alert(p + "," + url + "," + value)
+	                url = url.replace(p,"$1="+value);
+	        }else{
+	                url = url+'&'+param+'='+value;
+	        }
+	}else{
+	        url = url+'?'+param+'='+value;
+	}
+	return url;
+}   
+
+
+
+function pageHtml(total, pagesize) {
+	var html = '<ul class="pagination">'
+	page = getQueryVariable("page") 
+	page = parseInt(page)
+	if (!page || isNaN(page)) {
+		page = 1
+	}
+	
+	var total_page = Math.floor(total / pagesize)
+	if (total_page != total / pagesize) {
+		total_page++
+	}
+	var base_url = location.search
+	var next_page = page + 1
+	
+	
+	var first_url = set_url_param(base_url,"page",1)
+	//return
+	var last_url = set_url_param(base_url,"page",total_page)
+	var start_page = 1
+	
+	if (page > 2) {
+		start_page = page - 2
+	}
+	var last_page = start_page + 4
+	if (last_page > total_page) {
+		last_page = total_page
+	}
+	html +='<li><a href="'+first_url+'">&laquo;</a></li>'
+	var curr_url=''
+	var style_active = ''
+	for (var i=start_page;i<= last_page;i++) {
+		style_active = ''
+		console.log(i +", "+ page)
+		if (i == page) {
+			style_active = 'active'
+		}
+		curr_url = set_url_param(base_url,"page",i)
+		html +='<li class="'+style_active+'"><a href="'+curr_url+'">'+i+'</a></li>';
+	}
+	html +='<li><a href="'+last_url+'">&raquo;</a></li>'
+	return html
+}
+
+
+
+
+
+
+
+
+
+
+
+
 </script>
-
-
 </body>
 </html>

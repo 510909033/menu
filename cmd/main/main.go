@@ -25,6 +25,7 @@ func init() {
 func main() {
 
 	http.Handle("/default/", http.FileServer(http.Dir("../../template")))
+	http.Handle("/public/", http.FileServer(http.Dir("../../template")))
 	http.Handle("/js/", http.FileServer(http.Dir("template")))
 
 	h := &myHandler{
@@ -32,6 +33,7 @@ func main() {
 	}
 	h.registerController(&api.MenuController{})
 	h.registerController(&api.WechatController{})
+	h.registerController(&api.HistoryMenuController{})
 
 	http.Handle("/", h)
 
@@ -40,6 +42,8 @@ func main() {
 }
 
 func (this *myHandler) registerController(controller interface{}) {
+
+	//	getKey("history_menu_345_ok/get_user_1_list")
 
 	t := reflect.TypeOf(controller)
 	v := reflect.ValueOf(controller)
@@ -82,19 +86,26 @@ func getKey(path string) (string, error) {
 	}
 
 	controllerName := l[0]
-	for _, v := range controllerName {
-
-		controllerName = string(unicode.ToUpper(v)) + controllerName[1:]
-		break
+	calcControllerName := ""
+	for _, v := range strings.Split(controllerName, "_") {
+		for _, v1 := range v {
+			calcControllerName += string(unicode.ToUpper(v1)) + v[1:]
+			break
+		}
 	}
 
 	actionName := l[1]
-	for _, v := range actionName {
-		actionName = string(unicode.ToUpper(v)) + actionName[1:]
-		break
+	calcActionName := ""
+	for _, v := range strings.Split(actionName, "_") {
+		for _, v1 := range v {
+			calcActionName += string(unicode.ToUpper(v1)) + v[1:]
+			break
+		}
 	}
 
-	return controllerName + "Controller-" + actionName + "Action", nil
+	applog.Log(calcControllerName+"Controller-"+calcActionName+"Action", applog.DEBUG)
+
+	return calcControllerName + "Controller-" + calcActionName + "Action", nil
 }
 
 func (this *myHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {

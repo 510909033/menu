@@ -1,0 +1,115 @@
+
+<div class="col-md-10 column">
+	<form class="form-horizontal" role="form" action="/history_menu/save">
+		<div class="form-group">
+			 <label for="datetimepicker" class="col-sm-2 control-label">进餐时间</label>
+			<div class="col-sm-10">
+		
+				<div class="input-append date" id="datetimepicker" data-date="" data-date-format="">
+				    <input class="span2" size="16" type="text" value="" name="what_time">
+				    <span class="add-on"><i class="icon-remove"></i></span>
+				    <span class="add-on"><i class="icon-th"></i></span>
+				</div>    
+				
+				
+				
+			</div>
+		</div>
+		
+		<menu_pos id="menu_pos_menu_id"/>
+		<div class="form-group">
+			 <label for="" class="col-sm-2 control-label">菜单列表</label>
+			<div class="col-sm-10">
+		
+				  
+				
+				
+				
+			</div>
+		</div>
+		
+		
+		
+		
+		<div class="form-group">
+			<div class="col-sm-offset-2 col-sm-10">
+				 <input type="hidden" name="menu_id_list" value="" />
+				 <input type="hidden" name="user_id" value="12345" />
+				 <button type="submit" class="btn btn-default">提交</button>
+			</div>
+		</div>
+	</form>
+	
+	
+	
+	
+	
+	<div class="hide modal_position"></div>
+
+	
+	
+	
+</div>
+
+
+<script>
+
+$(function() {
+	
+	$.get("/default/menu/plugin/modal.html", function(data) {
+		$(".modal_position").replaceWith(data);
+	},'html');
+	
+	$('#datetimepicker').datetimepicker({
+	    format: 'yyyy-mm-dd hh:ii'
+	});
+	
+	$.get("/history_menu/list_all" + location.search, function(data) {
+		var str="";
+		for (i in data["data"]["list"]) {		
+			str += "<button type='button' class='btn btn-sm btn_menu_id'  value='"+data["data"]["list"][i]["id"]+"'>"+ data["data"]["list"][i]["title"] +"</button>&nbsp;&nbsp;";
+		}
+		$("#menu_pos_menu_id").next("div").children("div").html(str);
+		
+		$(".btn_menu_id").click(function() {
+			$(this).toggleClass("btn-success");
+			var menu_checked_list=""
+			$(".btn_menu_id.btn-success").each(function() {
+				menu_checked_list+=","+$(this).val();
+			});
+			$("input[name='menu_id_list']").val(menu_checked_list);
+			//alert(menu_checked_list)
+		});
+		
+	},"json");
+	
+	
+	$("form").submit(function() {
+		var url=$("form").attr("action")
+		var modal_id="modal-container-415722"
+		$.ajax({
+			url:url,
+			data:$("form").serialize(),
+			mehtod:"get",
+			dataType:"json",
+			success:function(data) {
+				showMsg(modal_id,data);
+			},
+			complete:function(data) {
+				
+			},
+			beforeSend:function(xhr) {
+				
+			},
+			error:function(d) {
+				alert(d)
+			}
+		});
+		return false
+	});
+	
+});
+
+</script>
+
+		

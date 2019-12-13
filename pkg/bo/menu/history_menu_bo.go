@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"reflect"
 
+	"baotian0506.com/app/menu/applog"
 	"baotian0506.com/app/menu/bgf_bo"
 )
 
@@ -36,7 +37,9 @@ type HistoryMenuBO struct {
 	CreateTs   int64  `column_name:"create_ts" json:"create_ts"`
 	UpdateTs   int64  `column_name:"update_ts" json:"update_ts"`
 
-	CreateTsFormat string `json:"create_ts_format"`
+	CreateTsFormat   string `json:"create_ts_format"`
+	WhatTimeFormat   string `json:"what_time_format"`
+	MenuIdListFormat string `json:"menu_id_list_format"`
 }
 
 func NewHistoryMenuBO(id int) *HistoryMenuBO {
@@ -87,6 +90,14 @@ func (bo *HistoryMenuBO) Query(where string, whereValue []interface{}, pageLimit
 
 	for _, v := range ret {
 		retList = append(retList, v.(HistoryMenuBO))
+	}
+	return
+}
+
+func (bo *HistoryMenuBO) Count(where string, whereValue []interface{}) (count int64, err error) {
+	count, err = bo.bgfBO.Count(where, whereValue)
+	if err != nil {
+		applog.Log(err, applog.ERROR)
 	}
 	return
 }

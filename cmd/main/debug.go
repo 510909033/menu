@@ -15,8 +15,8 @@ type MenuBO struct {
 }
 
 func init() {
-	fmt.Println("debug.go init")
-	model()
+	//	fmt.Println("debug.go init")
+	//	model()
 }
 
 func model() {

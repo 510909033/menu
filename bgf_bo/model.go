@@ -19,7 +19,7 @@ func init() {
 	applog.LogInfo.Printf("init")
 	var err error
 	var sqlResult sql.Result
-	db, err = sql.Open("mysql", "root:123qqqqq@/menu")
+	db, err = sql.Open("mysql", "root:root@/menu")
 	if err != nil {
 		applog.LogError.Printf("open db fail, %v", err)
 		panic(err)
@@ -356,4 +356,52 @@ func (modelMethod *ModelMethod) Save() (err error) {
 		}
 	}
 	return errRet
+}
+
+func (modelMethod *ModelMethod) Count(where string, whereValue []interface{}) (cnt int64, err error) {
+
+	if where != "" {
+		where = "where " + where
+	}
+
+	query := fmt.Sprintf("select count(*) cnt from %s %s  limit 1",
+		modelMethod.TableName,
+		where)
+
+	applog.LogInfo.Printf("query=%s", query)
+
+	var sqlRow *sql.Rows
+
+	sqlRow, err = db.Query(query, whereValue...)
+
+	//debug sql
+	debugQueryList := strings.Split(query, "?")
+
+	for k, v := range debugQueryList {
+		if k > (len(whereValue) - 1) {
+			break
+		}
+		debugQueryList[k] = v + fmt.Sprintf("%s", whereValue[k])
+	}
+	applog.LogInfo.Printf("debug sql=%s", strings.Join(debugQueryList, " "))
+
+	if err != nil {
+		applog.LogError.Printf("Query fail, err=%v", err)
+		return
+	}
+	defer sqlRow.Close()
+
+	for sqlRow.Next() {
+
+		err = sqlRow.Scan(&cnt)
+		if err != nil {
+			applog.LogError.Printf("Scan fail, err=%v", err)
+			return
+		}
+
+	}
+
+	//	applog.LogInfo.Printf("%v", dataInterface)
+
+	return
 }

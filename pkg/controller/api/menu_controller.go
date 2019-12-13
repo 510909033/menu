@@ -87,11 +87,45 @@ func (ctrl *MenuController) ListAction(ctx *base.BaseContext) {
 		page = 1
 	}
 
+	pagesize := 20
 	where := ""
 	whereValue := make([]interface{}, 0)
 	pageLimit := bgf_bo.PageLimit{
 		Page:  page,
-		Limit: 20,
+		Limit: pagesize,
+	}
+	retList, err = menuBO.Query(where, whereValue, pageLimit)
+	if err != nil {
+		ctx.Fail("获取列表失败1", nil)
+		return
+	}
+
+	if count, err := menuBO.Count(where, whereValue); err == nil {
+		ret["count"] = count
+	} else {
+		ctx.Fail("获取列表失败2", nil)
+		return
+	}
+
+	ret["pagesize"] = pagesize
+	ret["list"] = retList
+	ctx.Success(nil, ret)
+
+}
+
+// ListAllAction 获取所有菜单列表
+func (ctrl *HistoryMenuController) ListAllAction(ctx *base.BaseContext) {
+
+	menuBO := menu.NewMenuBO(0)
+	ret := make(map[string]interface{}, 0)
+	var retList []menu.MenuBO
+	var err error
+
+	where := ""
+	whereValue := make([]interface{}, 0)
+	pageLimit := bgf_bo.PageLimit{
+		Page:  1,
+		Limit: 2000,
 	}
 	retList, err = menuBO.Query(where, whereValue, pageLimit)
 	if err != nil {

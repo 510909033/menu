@@ -6,10 +6,10 @@
 					ID
 				</th>
 				<th>
-					名称
+					时间
 				</th>
 				<th>
-					创建时间
+					菜单列表
 				</th>
 				<th>
 					操作
@@ -20,6 +20,7 @@
 			
 		</tbody>
 	</table>
+	
 	<div class="mypage"></div>
 </div>
 
@@ -29,18 +30,16 @@ $(function() {
 });
 
 function getDataStart() {
-	
-	$.get("/menu/list" + location.search, function(data) {
+	$.get("/history_menu/list"+location.search, function(data) {
 		var str="";
 		
 		for (i in data["data"]["list"]) {
-			str +="<tr><td>"+data["data"]["list"][i]["id"]+"</td><td>"+data["data"]["list"][i]["title"]+"</td><td>"+data["data"]["list"][i]["create_ts_format"]+"</td><td>Default</td></tr>";
+			str +="<tr><td>"+data["data"]["list"][i]["id"]+"</td><td>"+data["data"]["list"][i]["what_time_format"]+"</td><td>"+data["data"]["list"][i]["menu_id_list_format"]+"</td><td>Default</td></tr>";
 		}
 		$("tbody").html(str);
 		
 		var page_html = pageHtml(data.data.count,data.data.pagesize);
 		$(".mypage").html(page_html)
-		
 	},"json");
 }
 </script>
