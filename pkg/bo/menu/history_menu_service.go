@@ -1,6 +1,7 @@
 package menu
 
 import (
+	"fmt"
 	"strconv"
 	"strings"
 	"time"
@@ -18,6 +19,7 @@ func (service *HistoryMenuService) FormatHistoryMenuBO(bo *HistoryMenuBO) {
 	bo.MenuIdListFormat = ""
 	menu_id_list := make([]string, 0)
 	for _, v := range strings.Split(bo.MenuIdList, ",") {
+		fmt.Println(v)
 		if v == "" {
 			continue
 		}

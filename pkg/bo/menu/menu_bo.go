@@ -46,7 +46,7 @@ func NewMenuBO(id int) *MenuBO {
 		DBName:    menu.GetDBName(),
 		IsNewRow:  true,
 	}
-	if menu.Id > 1 {
+	if menu.Id > 0 {
 		menu.bgfBO.Load()
 	}
 	return menu

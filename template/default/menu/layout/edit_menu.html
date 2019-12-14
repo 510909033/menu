@@ -31,8 +31,7 @@
 <script>
 
 $(function() {
-	
-	$.get("/default/menu/plugin/modal.html", function(data) {
+	$.get("/default/menu/plugin/modal.html?v="+v, function(data) {
 		$(".modal_position").replaceWith(data);
 	},'html');
 	
