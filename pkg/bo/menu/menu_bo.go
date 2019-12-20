@@ -39,7 +39,8 @@ type MenuBO struct {
 	CreateTs   int64  `column_name:"create_ts" json:"create_ts"`
 	UpdateTs   int64  `column_name:"update_ts" json:"update_ts"`
 
-	CreateTsFormat string `json:"create_ts_format"`
+	CreateTsFormat string                 `json:"create_ts_format"`
+	ExtraFormat    map[string]interface{} `json:"extra_format"`
 }
 
 func NewMenuBO(id int) *MenuBO {
@@ -92,6 +93,23 @@ func (bo *MenuBO) AddExtra(key string, value interface{}) error {
 		//@TODO 记录日志
 	}
 	return nil
+}
+func (bo *MenuBO) getExtra(key string) (interface{}, bool) {
+	extra := bo.Extra
+	dbResult := make(map[string]interface{})
+	if extra == "" {
+		return nil, false
+	}
+	if err := json.Unmarshal([]byte(extra), dbResult); err != nil {
+		//反解析失败，则extra置空
+		//@TODO 记录日志
+		return nil, false
+	}
+
+	if v, ok := dbResult[key]; ok {
+		return v, true
+	}
+	return nil, false
 }
 
 func (bo *MenuBO) Insert() error {

@@ -127,6 +127,13 @@ func (ctrl *MenuController) ListAction(ctx *base.BaseContext) {
 		return
 	}
 
+	service := &menu.MenuService{}
+	for k, v := range retList {
+		service.FormatBO(&v)
+
+		retList[k] = v
+	}
+
 	ret["pagesize"] = input.Pagesize
 	ret["list"] = retList
 	ctx.Success(nil, ret)
