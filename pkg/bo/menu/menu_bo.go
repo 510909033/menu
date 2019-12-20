@@ -1,6 +1,7 @@
 package menu
 
 import (
+	"encoding/json"
 	"fmt"
 	"reflect"
 
@@ -22,15 +23,21 @@ CREATE TABLE `w_menu` (
 
 */
 
+const (
+	CATEGORY_MENU = 1
+	CATEGORY_FOOD = 2
+)
+
 type MenuBO struct {
 	bgfBO *bgf_bo.ModelMethod
 
-	Id       int    `pk:"" column_name:"id" json:"id"`
-	UserId   int    `column_name:"user_id" json:"user_id"`
-	Title    string `column_name:"title" json:"title"`
-	Extra    string `column_name:"extra" json:"extra"`
-	CreateTs int64  `column_name:"create_ts" json:"create_ts"`
-	UpdateTs int64  `column_name:"update_ts" json:"update_ts"`
+	Id         int    `pk:"" column_name:"id" json:"id"`
+	CategoryId int    `column_name:"category_id" json:"category_id"`
+	UserId     int    `column_name:"user_id" json:"user_id"`
+	Title      string `column_name:"title" json:"title"`
+	Extra      string `column_name:"extra" json:"extra"`
+	CreateTs   int64  `column_name:"create_ts" json:"create_ts"`
+	UpdateTs   int64  `column_name:"update_ts" json:"update_ts"`
 
 	CreateTsFormat string `json:"create_ts_format"`
 }
@@ -66,6 +73,25 @@ func (menu *MenuBO) IsNewRow() bool {
 func init() {
 	fmt.Println("menu_bo init")
 	bgf_bo.Register(NewMenuBO(0))
+}
+
+func (bo *MenuBO) AddExtra(key string, value interface{}) error {
+	extra := bo.Extra
+	dbResult := make(map[string]interface{})
+	if extra != "" {
+		if err := json.Unmarshal([]byte(extra), dbResult); err != nil {
+			//反解析失败，则extra置空
+			//@TODO 记录日志
+		}
+	}
+	dbResult[key] = value
+	if bSlice, err := json.Marshal(dbResult); err == nil {
+		bo.Extra = string(bSlice)
+	} else {
+		//Marshal 失败
+		//@TODO 记录日志
+	}
+	return nil
 }
 
 func (bo *MenuBO) Insert() error {

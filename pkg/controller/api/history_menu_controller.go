@@ -1,12 +1,15 @@
 package api
 
 import (
+	"fmt"
 	"strconv"
 	"time"
 
+	"baotian0506.com/app/menu/applog"
 	"baotian0506.com/app/menu/base"
 	"baotian0506.com/app/menu/bgf_bo"
 	"baotian0506.com/app/menu/pkg/bo/menu"
+	"baotian0506.com/app/menu/pkg/bo/menu/menu_input"
 )
 
 type HistoryMenuController struct {
@@ -61,27 +64,32 @@ func (ctrl *HistoryMenuController) SaveAction(ctx *base.BaseContext) {
 
 // ListAction 列表
 func (ctrl *HistoryMenuController) ListAction(ctx *base.BaseContext) {
-
+	input := &menu_input.HistoryMenuList{}
 	historyMenuBO := menu.NewHistoryMenuBO(0)
 	ret := make(map[string]interface{}, 0)
 	var retList []menu.HistoryMenuBO
 	var err error
-	var pagesize = 20
 
-	pageStr := ctx.Request.FormValue("page")
-	var page int
-	if page, err = strconv.Atoi(pageStr); err != nil {
-		page = 1
+	err = ctx.Bind(input)
+
+	if err != nil {
+		err = fmt.Errorf("bind fail, err=%w", err)
+		applog.LogError.Println(err)
+		ctx.Fail("获取参数失败", nil)
+		return
 	}
-	if page < 1 {
-		page = 1
+
+	input.Pagesize = 20
+
+	if input.Page < 1 {
+		input.Page = 1
 	}
 
 	where := ""
 	whereValue := make([]interface{}, 0)
 	pageLimit := bgf_bo.PageLimit{
-		Page:  page,
-		Limit: pagesize,
+		Page:  input.Page,
+		Limit: input.Pagesize,
 	}
 	retList, err = historyMenuBO.Query(where, whereValue, pageLimit)
 	if err != nil {
@@ -102,8 +110,8 @@ func (ctrl *HistoryMenuController) ListAction(ctx *base.BaseContext) {
 		return
 	}
 
-	ret["pagesize"] = pagesize
-	ret["page"] = page
+	ret["pagesize"] = input.Pagesize
+	ret["page"] = input.Page
 	ret["list"] = retList
 	ctx.Success(nil, ret)
 

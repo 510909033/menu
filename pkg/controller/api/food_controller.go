@@ -11,13 +11,13 @@ import (
 	"baotian0506.com/app/menu/pkg/bo/menu/menu_input"
 )
 
-type MenuController struct {
+type FoodController struct {
 	base.Controller
 }
 
-func (ctrl *MenuController) SaveAction(ctx *base.BaseContext) {
+func (ctrl *FoodController) SaveAction(ctx *base.BaseContext) {
 	var err error
-	var input = &menu_input.MenuEdit{}
+	var input = &menu_input.FoodEdit{}
 
 	err = ctx.Bind(input)
 
@@ -30,15 +30,10 @@ func (ctrl *MenuController) SaveAction(ctx *base.BaseContext) {
 
 	ret := make(map[string]interface{}, 0)
 
-	input.CategoryId = menu.CATEGORY_MENU
 	input.Title = strings.TrimSpace(input.Title)
 
 	if input.Title == "" {
-		ctx.Fail("标题不能为空", nil)
-		return
-	}
-	if input.MenuIdList == "" {
-		ctx.Fail("食材不能为空", nil)
+		ctx.Fail("食材名称不能为空", nil)
 		return
 	}
 
@@ -47,11 +42,12 @@ func (ctrl *MenuController) SaveAction(ctx *base.BaseContext) {
 		return
 	}
 
+	input.CategoryId = menu.CATEGORY_FOOD
+
 	menuBO := menu.NewMenuBO(0)
 	menuBO.Title = input.Title
 	menuBO.UserId = input.UserId
 	menuBO.CategoryId = input.CategoryId
-	menuBO.AddExtra("menu_id_list", input.MenuIdList) //扩展字段
 
 	where := "category_id = ? and title = ?"
 	whereValue := make([]interface{}, 0)
@@ -79,13 +75,13 @@ func (ctrl *MenuController) SaveAction(ctx *base.BaseContext) {
 		return
 	}
 	ret["id"] = menuBO.Id
-	ret["redirect_url"] = "/default/menu/"
+	ret["redirect_url"] = "/default/menu/?layout=food_list"
 	ctx.Success("编辑成功", ret)
 
 }
 
-func (ctrl *MenuController) ListAction(ctx *base.BaseContext) {
-	var input = &menu_input.MenuList{}
+func (ctrl *FoodController) ListAction(ctx *base.BaseContext) {
+	var input = &menu_input.FoodList{}
 	var retList []menu.MenuBO
 	var err error
 
@@ -105,7 +101,7 @@ func (ctrl *MenuController) ListAction(ctx *base.BaseContext) {
 		input.Page = 1
 	}
 	input.Pagesize = 20
-	input.CategoryId = menu.CATEGORY_MENU
+	input.CategoryId = menu.CATEGORY_FOOD
 
 	where := "category_id = ?"
 	whereValue := make([]interface{}, 0)
@@ -133,8 +129,8 @@ func (ctrl *MenuController) ListAction(ctx *base.BaseContext) {
 
 }
 
-// ListAllAction 获取所有菜单列表
-func (ctrl *HistoryMenuController) ListAllAction(ctx *base.BaseContext) {
+// ListAllAction
+func (ctrl *FoodController) ListAllAction(ctx *base.BaseContext) {
 
 	menuBO := menu.NewMenuBO(0)
 	ret := make(map[string]interface{}, 0)
@@ -143,7 +139,7 @@ func (ctrl *HistoryMenuController) ListAllAction(ctx *base.BaseContext) {
 
 	where := "category_id = ?"
 	whereValue := make([]interface{}, 0)
-	whereValue = append(whereValue, menu.CATEGORY_MENU)
+	whereValue = append(whereValue, menu.CATEGORY_FOOD)
 	pageLimit := bgf_bo.PageLimit{
 		Page:  1,
 		Limit: 2000,

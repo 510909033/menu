@@ -34,6 +34,7 @@ func main() {
 	h.registerController(&api.MenuController{})
 	h.registerController(&api.WechatController{})
 	h.registerController(&api.HistoryMenuController{})
+	h.registerController(&api.FoodController{})
 
 	http.Handle("/", h)
 

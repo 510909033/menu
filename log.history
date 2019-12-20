@@ -1,0 +1,40 @@
+ALTER TABLE `menu`.`menu` 
+ADD COLUMN `category_id` int(0) UNSIGNED NOT NULL DEFAULT 0 COMMENT '分类id' AFTER `id`;
+
+
+CREATE TABLE `food` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  `category_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '分类id',
+  `user_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '用户user_id',
+  `title` varchar(1000) NOT NULL DEFAULT '' COMMENT '名称',
+  `create_ts` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '创建时间',
+  `update_ts` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '更新时间',
+  `extra` varchar(1000) CHARACTER SET latin1 NOT NULL DEFAULT '' COMMENT '扩展字段',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=110 DEFAULT CHARSET=utf8mb4 COMMENT='食材表'
+
+
+update menu set category_id = 1 ;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
