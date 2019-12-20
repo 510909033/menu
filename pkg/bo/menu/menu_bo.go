@@ -96,16 +96,18 @@ func (bo *MenuBO) AddExtra(key string, value interface{}) error {
 }
 func (bo *MenuBO) getExtra(key string) (interface{}, bool) {
 	extra := bo.Extra
+
 	dbResult := make(map[string]interface{})
 	if extra == "" {
 		return nil, false
 	}
-	if err := json.Unmarshal([]byte(extra), dbResult); err != nil {
+	if err := json.Unmarshal([]byte(extra), &dbResult); err != nil {
 		//反解析失败，则extra置空
 		//@TODO 记录日志
+		applog.LogError.Printf("Unmarshal fail, err:%+v, extra=%s", err, extra)
 		return nil, false
 	}
-
+	applog.LogDebug.Printf("dbResult:%+v", dbResult)
 	if v, ok := dbResult[key]; ok {
 		return v, true
 	}
