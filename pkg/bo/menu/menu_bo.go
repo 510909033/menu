@@ -39,8 +39,12 @@ type MenuBO struct {
 	CreateTs   int64  `column_name:"create_ts" json:"create_ts"`
 	UpdateTs   int64  `column_name:"update_ts" json:"update_ts"`
 
-	CreateTsFormat string                 `json:"create_ts_format"`
-	ExtraFormat    map[string]interface{} `json:"extra_format"`
+	CreateTsFormat string     `json:"create_ts_format"`
+	ExtraFormat    *MenuExtra `json:"extra_format"`
+}
+
+type MenuExtra struct {
+	MenuIdList string `json:"menu_id_list"`
 }
 
 func NewMenuBO(id int) *MenuBO {

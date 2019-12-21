@@ -10,6 +10,7 @@ type MenuService struct {
 }
 
 func (service *MenuService) FormatBO(bo *MenuBO) {
+	bo.ExtraFormat = &MenuExtra{}
 
 	ExtraMenuIdList, exists := bo.getExtra("menu_id_list")
 	if !exists {
@@ -21,7 +22,6 @@ func (service *MenuService) FormatBO(bo *MenuBO) {
 	}
 
 	menu_id_list := make([]string, 0)
-	bo.ExtraFormat = make(map[string]interface{}, 0)
 
 	for _, v := range strings.Split(ExtraMenuIdListValue, ",") {
 		fmt.Println(v)
@@ -36,6 +36,6 @@ func (service *MenuService) FormatBO(bo *MenuBO) {
 		menu_bo := NewMenuBO(menu_id)
 		menu_id_list = append(menu_id_list, menu_bo.Title)
 	}
-	bo.ExtraFormat["menu_id_list"] = strings.Join(menu_id_list, ",")
+	bo.ExtraFormat.MenuIdList = strings.Join(menu_id_list, ",")
 
 }
