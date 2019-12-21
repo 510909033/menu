@@ -223,7 +223,14 @@ func (modelMethod *ModelMethod) Query(where string, whereValue []interface{}, li
 		if k > (len(whereValue) - 1) {
 			break
 		}
-		debugQueryList[k] = v + fmt.Sprintf("%s", whereValue[k])
+		tmpValue := whereValue[k]
+		rt := reflect.TypeOf(tmpValue)
+		if rt.Kind().String() == "string" {
+			debugQueryList[k] = v + fmt.Sprintf("%s", whereValue[k])
+		} else {
+			debugQueryList[k] = v + fmt.Sprintf("%d", whereValue[k])
+		}
+
 	}
 	applog.LogInfo.Printf("debug sql=%s", strings.Join(debugQueryList, " "))
 
@@ -381,7 +388,14 @@ func (modelMethod *ModelMethod) Count(where string, whereValue []interface{}) (c
 		if k > (len(whereValue) - 1) {
 			break
 		}
-		debugQueryList[k] = v + fmt.Sprintf("%s", whereValue[k])
+
+		tmpValue := whereValue[k]
+		rt := reflect.TypeOf(tmpValue)
+		if rt.Kind().String() == "string" {
+			debugQueryList[k] = v + fmt.Sprintf("%s", whereValue[k])
+		} else {
+			debugQueryList[k] = v + fmt.Sprintf("%d", whereValue[k])
+		}
 	}
 	applog.LogInfo.Printf("debug sql=%s", strings.Join(debugQueryList, " "))
 

@@ -11,7 +11,7 @@ import (
 
 /*
 
-CREATE TABLE `w_menu` (
+CREATE TABLE `menu` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
   `user_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '用户user_id',
   `title` VARCHAR(1000)  NOT NULL DEFAULT '' COMMENT '名称',
