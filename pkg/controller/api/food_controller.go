@@ -51,7 +51,7 @@ func (ctrl *FoodController) SaveAction(ctx *base.BaseContext) {
 
 	where := "category_id = ? and title = ?"
 	whereValue := make([]interface{}, 0)
-	whereValue = append(whereValue, menu.CATEGORY_MENU, input.Title)
+	whereValue = append(whereValue, menu.CATEGORY_FOOD, input.Title)
 	pageLimit := bgf_bo.PageLimit{
 		Page:  1,
 		Limit: 1,

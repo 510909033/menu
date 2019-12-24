@@ -19,7 +19,7 @@ func init() {
 	applog.LogInfo.Printf("init")
 	var err error
 	var sqlResult sql.Result
-	db, err = sql.Open("mysql", "root:root@/menu")
+	db, err = sql.Open("mysql", "root:123qqqqq@/menu")
 	if err != nil {
 		applog.LogError.Printf("open db fail, %v", err)
 		panic(err)
