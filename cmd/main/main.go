@@ -21,6 +21,7 @@ type myHandler struct {
 
 func init() {
 	applog.LogInfo.Printf("main init")
+
 }
 func main() {
 
@@ -35,6 +36,7 @@ func main() {
 	h.registerController(&api.WechatController{})
 	h.registerController(&api.HistoryMenuController{})
 	h.registerController(&api.FoodController{})
+	h.registerController(&api.WebconfigController{})
 
 	http.Handle("/", h)
 

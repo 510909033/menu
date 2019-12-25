@@ -152,6 +152,15 @@ $.get("/default/menu/plugin/daohang.html?v=" + v, function(data) {
 	$.get("/default/menu/layout/"+layout+".html?v=" + v, function(data) {
 		$(".menu").after(data)
 	},"html")
+	
+	$.get("/webconfig/get_menu_list", function(data) {
+		var s='<div class="col-md-12 column">'
+		for (var i in data.data) {
+			s +='<span class="label label-info" onclick="jump(\''+data["data"][i]["link"]+'\')">'+data["data"][i]["title"]+'</span>'
+		}
+		s +='</div>'
+		$(".menu").after(s)
+	},"json")
 },"html")
 
 

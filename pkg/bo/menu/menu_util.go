@@ -13,6 +13,42 @@ import (
 
 var db = &sql.DB{}
 
+type PageMenu struct {
+	Title string `json:"title"`
+	Link  string `json:"link"`
+}
+
+func GetMenu() []*PageMenu {
+	var ret = []*PageMenu{
+		&PageMenu{
+			Title: "食材列表",
+			Link:  "/default/menu/?layout=food_list",
+		},
+		&PageMenu{
+			Title: "菜单列表",
+			Link:  "/default/menu/?layout=menu_list",
+		},
+		&PageMenu{
+			Title: "我的记录",
+			Link:  "/default/menu/index.html?layout=history_menu_list",
+		},
+		&PageMenu{
+			Title: "添加食材",
+			Link:  "/default/menu/index.html?layout=food_edit",
+		},
+		&PageMenu{
+			Title: "添加菜单",
+			Link:  "/default/menu/index.html?layout=menu_edit",
+		},
+
+		&PageMenu{
+			Title: "添加记录",
+			Link:  "/default/menu/index.html?layout=history_menu_edit",
+		},
+	}
+	return ret
+}
+
 func init() {
 	var err error
 	db, err = sql.Open("mysql", "root:root@/menu")
