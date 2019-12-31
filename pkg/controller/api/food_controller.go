@@ -75,7 +75,11 @@ func (ctrl *FoodController) SaveAction(ctx *base.BaseContext) {
 		return
 	}
 	ret["id"] = menuBO.Id
-	ret["redirect_url"] = "/default/menu/?layout=food_list"
+	ret["modal-first-btn-text"] = "返回列表"
+	ret["modal-first-btn-url"] = "/default/menu/?layout=food_list"
+	ret["modal-second-btn-text"] = "继续添加"
+	ret["modal-second-btn-url"] = "refresh"
+
 	ctx.Success("编辑成功", ret)
 
 }

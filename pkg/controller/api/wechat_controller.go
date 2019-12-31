@@ -2,13 +2,18 @@ package api
 
 import (
 	"fmt"
+	"net/url"
+	"strconv"
+	"time"
 
 	"baotian0506.com/app/menu/applog"
 	"baotian0506.com/app/menu/base"
+	"baotian0506.com/app/menu/sign"
 	"github.com/silenceper/wechat"
 	"github.com/silenceper/wechat/cache"
 	"github.com/silenceper/wechat/menu"
 	"github.com/silenceper/wechat/message"
+	"github.com/silenceper/wechat/qr"
 )
 
 type WechatController struct {
@@ -24,6 +29,24 @@ var config = &wechat.Config{
 	Cache:          memCache,
 }
 var wc = wechat.NewWechat(config)
+
+func (ctrl *WechatController) QrcodeAction(ctx *base.BaseContext) {
+
+	qrcode := wc.GetQR()
+
+	// uniqid_key
+
+	request := qr.NewTmpQrRequest(time.Second*300, "q=123&p=我")
+
+	ticket, err := qrcode.GetQRTicket(request)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	url := qr.ShowQRCode(ticket)
+
+	fmt.Println(url)
+}
 
 func (ctrl *WechatController) IndexAction(ctx *base.BaseContext) {
 	rw := ctx.Writer
@@ -97,6 +120,21 @@ func (ctrl *WechatController) IndexAction(ctx *base.BaseContext) {
 				// 点击菜单拉取消息时的事件推送
 			case message.EventClick:
 				//do something
+				//回复消息：演示回复用户发送的消息
+				params := make(map[string]string)
+				params["timestamp"] = strconv.FormatInt(time.Now().Unix(), 10)
+				params["openid"] = v.OpenID
+
+				signUtil := sign.SignUtil{}
+				params["sign"] = signUtil.CalcSign(params)
+				u := make(url.Values)
+				for k, v := range params {
+					u.Set(k, v)
+				}
+				url := fmt.Sprintf(`<a href="http://39.106.133.49:9678/user/login?%s">菜单列表</a>`, u.Encode())
+
+				text := message.NewText(url)
+				return &message.Reply{MsgType: message.MsgTypeText, MsgData: text}
 
 				// 点击菜单跳转链接时的事件推送
 			case message.EventView:

@@ -25,6 +25,9 @@ func init() {
 }
 func main() {
 
+	//	(&api.WechatController{}).QrcodeAction(nil)
+	//	return
+
 	http.Handle("/default/", http.FileServer(http.Dir("../../template")))
 	http.Handle("/public/", http.FileServer(http.Dir("../../template")))
 	http.Handle("/js/", http.FileServer(http.Dir("template")))
@@ -37,6 +40,7 @@ func main() {
 	h.registerController(&api.HistoryMenuController{})
 	h.registerController(&api.FoodController{})
 	h.registerController(&api.WebconfigController{})
+	h.registerController(&api.UserController{})
 
 	http.Handle("/", h)
 

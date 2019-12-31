@@ -53,12 +53,46 @@ for (i in location) {
 function showMsg(modal_id,data) {
 	$(".modal-title").html("提示信息");
 	$(".modal-body").html(data.msg);
+	if (data.status == "fail") {
+		$(".modal .modal-second-btn").hide()
+	} else {
+		$(".modal .modal-second-btn").show()
+	}
 	
+	if(data["data"] && data["data"]["modal-first-btn-text"]) {
+		$(".modal .modal-first-btn").html(data["data"]["modal-first-btn-text"])
+	}
+	if(data["data"] && data["data"]["modal-first-btn-url"]) {
+		$(".modal .modal-first-btn").click(function() {
+			if (data["data"]["modal-first-btn-url"] == "refresh") {
+				data["data"]["modal-first-btn-url"] = location.href
+			}
+			if(!data["data"]["modal-first-btn-url"]) {
+				location.href=data["data"]["modal-first-btn-url"]
+			}
+		})
+	}
+	
+	if(data["data"] && data["data"]["modal-second-btn-text"]) {
+		$(".modal .modal-second-btn").html(data["data"]["modal-second-btn-text"])
+	}
+	if(data["data"] && data["data"]["modal-second-btn-url"]) {
+		$(".modal .modal-second-btn").click(function(){
+			if (data["data"]["modal-second-btn-url"] == "refresh") {
+				data["data"]["modal-second-btn-url"] = location.href
+			}
+			if(!data["data"]["modal-first-btn-url"]) {
+				location.href=data["data"]["modal-second-btn-url"]
+			}
+		})
+	}
+	
+	/*
 	$(".modal-footer button[data-dismiss='modal']").click(function() {
 		if(data.data.redirect_url) {
 			location.href=data.data.redirect_url
 		}
-	});
+	});*/
 	$('#'+modal_id).modal('show');	
 }
 
@@ -129,6 +163,7 @@ function pageHtml(total, pagesize) {
 
 
 function jump(url) {
+	url=set_url_param(url, "v",v)
     location.href = url 
 }
 
@@ -143,7 +178,7 @@ if (!layout) {
 }
 
 var v=getQueryVariable("v")
-
+v="19122501"
 
 
 $.get("/default/menu/plugin/daohang.html?v=" + v, function(data) {

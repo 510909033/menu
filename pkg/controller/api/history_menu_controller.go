@@ -57,7 +57,10 @@ func (ctrl *HistoryMenuController) SaveAction(ctx *base.BaseContext) {
 		return
 	}
 	ret["id"] = historyMenuBO.Id
-	ret["redirect_url"] = "/default/menu/index.html?layout=history_menu_list"
+	ret["modal-first-btn-text"] = "返回列表"
+	ret["modal-first-btn-url"] = "/default/menu/?layout=history_menu_list"
+	ret["modal-second-btn-text"] = "继续添加"
+	ret["modal-second-btn-url"] = "refresh"
 	ctx.Success("编辑成功", ret)
 
 }
