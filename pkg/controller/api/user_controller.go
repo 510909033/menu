@@ -43,8 +43,11 @@ func (ctrl *UserController) WechatLoginAction(ctx *base.BaseContext) {
 
 	applog.LogInfo.Println("login_string=" + ctx.Request.FormValue("login_string"))
 
+	ctx.Request.Form.Del("nsukey")
+
 	if signUtil.CheckSign(ctx.Request) {
-		url := fmt.Sprintf("%s%s?%s", config.GetDomain(), "/default/menu", "layout=default&login_string="+ctx.Request.FormValue("login_string"))
+		v := ctx.Request.FormValue("v")
+		url := fmt.Sprintf("%s%s?%s", config.GetDomain(), "/default/menu", "layout=default&login_string="+ctx.Request.FormValue("login_string")+"&v="+v)
 		http.Redirect(ctx.Writer, ctx.Request, url, 301)
 		return
 	} else {

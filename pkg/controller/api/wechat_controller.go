@@ -8,6 +8,7 @@ import (
 
 	"baotian0506.com/app/menu/applog"
 	"baotian0506.com/app/menu/base"
+	"baotian0506.com/app/menu/config"
 	"baotian0506.com/app/menu/sign"
 	"baotian0506.com/app/menu/util"
 	"github.com/silenceper/wechat"
@@ -62,8 +63,8 @@ func (ctrl *WechatController) IndexAction(ctx *base.BaseContext) {
 	//设置接收消息的处理方法
 	server.SetMessageHandler(func(v message.MixMessage) *message.Reply {
 
-		applog.LogInfo.Printf("MixMessage:%v", v)
-		applog.LogInfo.Printf("MsgType:%s", v.MsgType)
+		applog.LogInfo.Printf("MsgType:%s\n", v.MsgType)
+		applog.LogInfo.Printf("MixMessage:%+v\n", v)
 
 		switch v.MsgType {
 		//文本消息
@@ -99,7 +100,7 @@ func (ctrl *WechatController) IndexAction(ctx *base.BaseContext) {
 
 			//事件推送消息
 		case message.MsgTypeEvent:
-			applog.LogInfo.Printf("Event:%s", v.Event)
+			applog.LogInfo.Printf("Event:%s\n", v.Event)
 			//事件推送消息
 			switch v.Event {
 			//EventSubscribe 订阅
@@ -125,7 +126,8 @@ func (ctrl *WechatController) IndexAction(ctx *base.BaseContext) {
 				//回复消息：演示回复用户发送的消息
 				params := make(map[string]string)
 				params["timestamp"] = strconv.FormatInt(time.Now().Unix(), 10)
-				params["login_string"] = signUtil.GetLoginString(v.OpenID)
+				params["login_string"] = signUtil.GetLoginString(req.FormValue("openid"))
+				params["v"] = config.GetVersion()
 
 				params["sign"] = signUtil.CalcSign(params)
 				u := make(url.Values)

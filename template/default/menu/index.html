@@ -218,7 +218,7 @@ $.get(getTemplateUrl("/default/menu/plugin/daohang.html"), function(data) {
 	$.get(getApiUrl("/webconfig/get_menu_list"), function(data) {
 		var s='<div class="col-md-12 column">'
 		for (var i in data.data) {
-			s +='<span class="label label-info" onclick="jump(\''+data["data"][i]["link"]+'\')">'+data["data"][i]["title"]+'</span>'
+			s +='<span class="label label-info" onclick="jump(\''+data["data"][i]["link"]+'\')">'+data["data"][i]["title"]+'</span> '
 		}
 		s +='</div>'
 		$(".menu").after(s)

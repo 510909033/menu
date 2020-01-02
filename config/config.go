@@ -25,7 +25,7 @@ func init() {
 		os.Exit(-1)
 	}
 
-	dir = "~/.menu_config/"
+	dir = "/root/.menu_config/"
 	filename := dir + CONFIG_FILENAME
 	c, err = goconfig.LoadConfigFile(filename) //加载配置文件
 	if err != nil {
@@ -62,6 +62,14 @@ func GetSecret() string {
 	return val
 }
 
+func GetVersion() string {
+	val, err := c.GetValue("sys", "version")
+	if err != nil {
+		return ""
+	}
+
+	return val
+}
 func GetMysqConfig() *Mysql {
 	m := &Mysql{}
 	password, _ := c.GetValue("mysql", "password")
