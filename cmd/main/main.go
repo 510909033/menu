@@ -12,7 +12,9 @@ import (
 
 	"baotian0506.com/app/menu/applog"
 	"baotian0506.com/app/menu/base"
+	"baotian0506.com/app/menu/config"
 	"baotian0506.com/app/menu/pkg/controller/api"
+	"baotian0506.com/app/menu/pkg/controller/api/demo"
 )
 
 type myHandler struct {
@@ -24,6 +26,7 @@ func init() {
 
 }
 func main() {
+	config.GetDomain() //初始化配置
 
 	//	(&api.WechatController{}).QrcodeAction(nil)
 	//	return
@@ -41,6 +44,7 @@ func main() {
 	h.registerController(&api.FoodController{})
 	h.registerController(&api.WebconfigController{})
 	h.registerController(&api.UserController{})
+	h.registerController(&demo.DemoEnvController{})
 
 	http.Handle("/", h)
 
@@ -86,7 +90,11 @@ func getKey(path string) (string, error) {
 	}
 
 	l := strings.Split(path, "/")
-	if len(l) != 2 {
+
+	if len(l) == 2 {
+	} else if len(l) == 3 {
+		l = l[1:]
+	} else {
 		err := errors.New("path 格式错误：" + path)
 		applog.LogError.Printf("%v", err)
 		return "", err

@@ -33,6 +33,12 @@ func (ctrl *MenuController) SaveAction(ctx *base.BaseContext) {
 	input.CategoryId = menu.CATEGORY_MENU
 	input.Title = strings.TrimSpace(input.Title)
 
+	userId := ctx.GetUserId()
+	if userId < 1 {
+		ctx.Fail("请先登录", nil)
+		return
+	}
+
 	if input.Title == "" {
 		ctx.Fail("标题不能为空", nil)
 		return
@@ -49,7 +55,7 @@ func (ctrl *MenuController) SaveAction(ctx *base.BaseContext) {
 
 	menuBO := menu.NewMenuBO(0)
 	menuBO.Title = input.Title
-	menuBO.UserId = input.UserId
+	menuBO.UserId = userId
 	menuBO.CategoryId = input.CategoryId
 	menuBO.AddExtra("menu_id_list", input.MenuIdList) //扩展字段
 
@@ -98,6 +104,12 @@ func (ctrl *MenuController) ListAction(ctx *base.BaseContext) {
 		err = fmt.Errorf("bind fail, err=%w", err)
 		applog.LogError.Println(err)
 		ctx.Fail("获取参数失败", nil)
+		return
+	}
+
+	userId := ctx.GetUserId()
+	if userId < 1 {
+		ctx.Fail("请先登录", nil)
 		return
 	}
 

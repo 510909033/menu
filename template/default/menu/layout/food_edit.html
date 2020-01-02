@@ -31,7 +31,7 @@
 <script>
 
 $(function() {
-	$.get("/default/menu/plugin/modal.html?v="+v, function(data) {
+	$.get(getTemplateUrl("/default/menu/plugin/modal.html"), function(data) {
 		$(".modal_position").replaceWith(data);
 	},'html');
 	
@@ -40,7 +40,7 @@ $(function() {
 		
 		var modal_id="modal-container-415722"
 		$.ajax({
-			url:url,
+			url:getApiUrl(url),
 			data:$("form.formflag").serialize(),
 			mehtod:"get",
 			dataType:"json",

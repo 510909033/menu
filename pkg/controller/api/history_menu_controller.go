@@ -2,7 +2,6 @@ package api
 
 import (
 	"fmt"
-	"strconv"
 	"time"
 
 	"baotian0506.com/app/menu/applog"
@@ -23,17 +22,15 @@ func (ctrl *HistoryMenuController) SaveAction(ctx *base.BaseContext) {
 
 	menu_id_list := ctx.Request.FormValue("menu_id_list")
 	what_time := ctx.Request.FormValue("what_time")
-	userIdString := ctx.Request.FormValue("user_id")
 
-	userId, err = strconv.Atoi(userIdString)
-
-	if menu_id_list == "" {
-		ctx.Fail("菜单必选", nil)
+	userId = ctx.GetUserId()
+	if userId < 1 {
+		ctx.Fail("请先登录", nil)
 		return
 	}
 
-	if userId < 1 {
-		ctx.Fail("用户不能为空", nil)
+	if menu_id_list == "" {
+		ctx.Fail("菜单必选", nil)
 		return
 	}
 

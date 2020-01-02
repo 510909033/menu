@@ -10,7 +10,6 @@ type WebconfigController struct {
 }
 
 func (ctrl *WebconfigController) GetMenuListAction(ctx *base.BaseContext) {
-
 	ret := menu.GetMenu()
 	ctx.Success(nil, ret)
 

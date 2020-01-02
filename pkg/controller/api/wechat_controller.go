@@ -9,6 +9,7 @@ import (
 	"baotian0506.com/app/menu/applog"
 	"baotian0506.com/app/menu/base"
 	"baotian0506.com/app/menu/sign"
+	"baotian0506.com/app/menu/util"
 	"github.com/silenceper/wechat"
 	"github.com/silenceper/wechat/cache"
 	"github.com/silenceper/wechat/menu"
@@ -21,14 +22,14 @@ type WechatController struct {
 }
 
 var memCache = cache.NewMemory()
-var config = &wechat.Config{
+var configWechat = &wechat.Config{
 	AppID:          "wx8156b3306d48031a",
 	AppSecret:      "4a9df11334c00d838641ea65b4255dbf",
 	Token:          "o0n2gjvGcQ5kSXg9rNzOJfYwR0MM",
 	EncodingAESKey: "yourencodingaeskey",
 	Cache:          memCache,
 }
-var wc = wechat.NewWechat(config)
+var wc = wechat.NewWechat(configWechat)
 
 func (ctrl *WechatController) QrcodeAction(ctx *base.BaseContext) {
 
@@ -119,19 +120,21 @@ func (ctrl *WechatController) IndexAction(ctx *base.BaseContext) {
 
 				// 点击菜单拉取消息时的事件推送
 			case message.EventClick:
+				signUtil := sign.SignUtil{}
 				//do something
 				//回复消息：演示回复用户发送的消息
 				params := make(map[string]string)
 				params["timestamp"] = strconv.FormatInt(time.Now().Unix(), 10)
-				params["openid"] = v.OpenID
+				params["login_string"] = signUtil.GetLoginString(v.OpenID)
 
-				signUtil := sign.SignUtil{}
 				params["sign"] = signUtil.CalcSign(params)
 				u := make(url.Values)
 				for k, v := range params {
 					u.Set(k, v)
 				}
-				url := fmt.Sprintf(`<a href="http://39.106.133.49:9678/user/login?%s">菜单列表</a>`, u.Encode())
+
+				url := util.GetUrl("/user/wechatLogin", u)
+				url = fmt.Sprintf(`<a href="%s">菜单列表</a>`, url)
 
 				text := message.NewText(url)
 				return &message.Reply{MsgType: message.MsgTypeText, MsgData: text}

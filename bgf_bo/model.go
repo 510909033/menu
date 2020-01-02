@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"baotian0506.com/app/menu/applog"
+	"baotian0506.com/app/menu/config"
 	"baotian0506.com/app/menu/pkg/common"
 	_ "github.com/go-sql-driver/mysql"
 )
@@ -19,7 +20,11 @@ func init() {
 	applog.LogInfo.Printf("init")
 	var err error
 	var sqlResult sql.Result
-	db, err = sql.Open("mysql", "root:root@/menu")
+
+	mysqlConfig := config.GetMysqConfig()
+	password := mysqlConfig.Password
+
+	db, err = sql.Open("mysql", "root:"+password+"@/menu")
 	if err != nil {
 		applog.LogError.Printf("open db fail, %v", err)
 		panic(err)

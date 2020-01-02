@@ -5,6 +5,8 @@ import (
 	"net/http"
 
 	"baotian0506.com/app/menu/applog"
+	"baotian0506.com/app/menu/pkg/bo/user"
+	"baotian0506.com/app/menu/sign"
 	"github.com/go-playground/form/v4"
 )
 
@@ -46,4 +48,13 @@ func (bc *BaseContext) Bind(input interface{}) (err error) {
 	}
 
 	return nil
+}
+
+func (bc *BaseContext) GetUserId() int {
+	u := &user.UserUtil{}
+	signUtil := &sign.SignUtil{}
+	if encUserId, err := signUtil.GetUserUniqid(bc.Request.FormValue("login_string")); err == nil {
+		return u.GetUserId(encUserId)
+	}
+	return 0
 }

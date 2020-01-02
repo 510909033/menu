@@ -21,6 +21,13 @@ func (ctrl *FoodController) SaveAction(ctx *base.BaseContext) {
 
 	err = ctx.Bind(input)
 
+	userId := ctx.GetUserId()
+	if userId < 1 {
+		ctx.Fail("请先登录", nil)
+		return
+	}
+	input.UserId = userId
+
 	if err != nil {
 		err = fmt.Errorf("bind fail, err=%w", err)
 		applog.LogError.Println(err)

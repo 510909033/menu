@@ -31,7 +31,7 @@ $(function() {
 });
 
 function getDataStart() {
-	$.get("/history_menu/list"+location.search, function(data) {
+	$.get(getApiUrl("/history_menu/list"), function(data) {
 		var str="";
 		
 		for (i in data["data"]["list"]) {

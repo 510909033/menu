@@ -2,18 +2,20 @@ package sign
 
 import (
 	"crypto/md5"
+	"errors"
 	"fmt"
+	"net/http"
 	"net/url"
 	"sort"
 	"strings"
 
-	"baotian0506.com/app/menu/base"
+	"baotian0506.com/app/menu/config"
 )
 
 type SignUtil struct{}
 
-func (piru *SignUtil) CheckSign(ctx *base.BaseContext) bool {
-	r := ctx.Request
+func (piru *SignUtil) CheckSign(r *http.Request) bool {
+
 	r.ParseForm()
 
 	signRet := ""
@@ -33,7 +35,6 @@ func (piru *SignUtil) CheckSign(ctx *base.BaseContext) bool {
 
 //计算签名
 func (piru *SignUtil) CalcSign(params map[string]string) string {
-
 	signParams := make(map[string]string)
 	for k, v := range params {
 		k = strings.ToLower(k)
@@ -55,5 +56,20 @@ func (piru *SignUtil) CalcSign(params map[string]string) string {
 }
 
 func (piru *SignUtil) GetSecretKey() string {
-	return "iambabytreekey!@#$%^&*()"
+	return config.GetSecret()
+}
+
+func (piru *SignUtil) GetLoginString(userUniqid string) string {
+	return userUniqid + "_" + fmt.Sprintf("%x", md5.Sum([]byte(userUniqid+piru.GetSecretKey())))
+}
+
+func (piru *SignUtil) GetUserUniqid(loginString string) (userUniqid string, err error) {
+	l := strings.Split(loginString, "_")
+	if len(l) != 2 {
+		return "", errors.New("解析loginString失败,len!=2")
+	}
+	if l[1] != fmt.Sprintf("%x", md5.Sum([]byte(l[0]+piru.GetSecretKey()))) {
+		return "", errors.New("loginString验签失败")
+	}
+	return l[0], nil
 }

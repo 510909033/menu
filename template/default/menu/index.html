@@ -67,8 +67,8 @@ function showMsg(modal_id,data) {
 			if (data["data"]["modal-first-btn-url"] == "refresh") {
 				data["data"]["modal-first-btn-url"] = location.href
 			}
-			if(!data["data"]["modal-first-btn-url"]) {
-				location.href=data["data"]["modal-first-btn-url"]
+			if(data["data"]["modal-first-btn-url"]) {
+				jump(data["data"]["modal-first-btn-url"])
 			}
 		})
 	}
@@ -81,8 +81,8 @@ function showMsg(modal_id,data) {
 			if (data["data"]["modal-second-btn-url"] == "refresh") {
 				data["data"]["modal-second-btn-url"] = location.href
 			}
-			if(!data["data"]["modal-first-btn-url"]) {
-				location.href=data["data"]["modal-second-btn-url"]
+			if(data["data"]["modal-first-btn-url"]) {
+				jump(data["data"]["modal-second-btn-url"])
 			}
 		})
 	}
@@ -163,32 +163,59 @@ function pageHtml(total, pagesize) {
 
 
 function jump(url) {
-	url=set_url_param(url, "v",v)
+	url=getApiUrl(url)
     location.href = url 
 }
 
 
+function getApiUrl(url) {
+	url=set_url_param(url, "v",v)
+	url=set_url_param(url, "login_string",login_string)
+	return url
+}
+
+function getTemplateUrl(path) {
+	return path+"?v="+v
+}
 
 
 
 
 var layout = getQueryVariable("layout")
-if (!layout) {
+if (!layout || layout == "default") {
 	layout = "menu_list"
 }
 
 var v=getQueryVariable("v")
 v="19122501"
+var login_string = getQueryVariable("login_string")
+
+//1 检查login_string
+$.ajax({
+	url:getApiUrl("/user/check_login"),
+	data:"",
+	mehtod:"get",
+	dataType:"json",
+	success:function(data) {
+		//showMsg(modal_id,data);
+	},
+	complete:function(data) {
+		
+	},
+	beforeSend:function(xhr) {
+		
+	}
+});
 
 
-$.get("/default/menu/plugin/daohang.html?v=" + v, function(data) {
+$.get(getTemplateUrl("/default/menu/plugin/daohang.html"), function(data) {
 	$(".container").prepend(data)
 	
-	$.get("/default/menu/layout/"+layout+".html?v=" + v, function(data) {
+	$.get(getTemplateUrl("/default/menu/layout/"+layout+".html"), function(data) {
 		$(".menu").after(data)
 	},"html")
 	
-	$.get("/webconfig/get_menu_list", function(data) {
+	$.get(getApiUrl("/webconfig/get_menu_list"), function(data) {
 		var s='<div class="col-md-12 column">'
 		for (var i in data.data) {
 			s +='<span class="label label-info" onclick="jump(\''+data["data"][i]["link"]+'\')">'+data["data"][i]["title"]+'</span>'
@@ -200,7 +227,13 @@ $.get("/default/menu/plugin/daohang.html?v=" + v, function(data) {
 
 
 
+if (!v) {
+	alert("v变量不存在，请联系开发说明一下操作场景")
+}
 
+if (!login_string) {
+	alert("login_string变量不存在，请联系开发说明一下操作场景")
+}
 
 
 </script>
