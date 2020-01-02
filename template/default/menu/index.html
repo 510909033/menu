@@ -25,6 +25,10 @@
 <body >
 <div class="container">
 	
+	<div class="row clearfix daohang_in_line "></div>
+	<div class="row clearfix menu_in_line "></div>
+	<div class="row clearfix data_in_line "></div>
+	
 </div>
 
 <script>
@@ -187,7 +191,6 @@ if (!layout || layout == "default") {
 }
 
 var v=getQueryVariable("v")
-v="19122501"
 var login_string = getQueryVariable("login_string")
 
 //1 检查login_string
@@ -209,10 +212,10 @@ $.ajax({
 
 
 $.get(getTemplateUrl("/default/menu/plugin/daohang.html"), function(data) {
-	$(".container").prepend(data)
+	$(".daohang_in_line").html(data)
 	
 	$.get(getTemplateUrl("/default/menu/layout/"+layout+".html"), function(data) {
-		$(".menu").after(data)
+		$(".data_in_line").html(data)
 	},"html")
 	
 	$.get(getApiUrl("/webconfig/get_menu_list"), function(data) {
@@ -221,7 +224,7 @@ $.get(getTemplateUrl("/default/menu/plugin/daohang.html"), function(data) {
 			s +='<span class="label label-info" onclick="jump(\''+data["data"][i]["link"]+'\')">'+data["data"][i]["title"]+'</span> '
 		}
 		s +='</div>'
-		$(".menu").after(s)
+		$(".menu_in_line").html(s)
 	},"json")
 },"html")
 

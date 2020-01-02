@@ -143,6 +143,10 @@ func (ctrl *FoodController) ListAction(ctx *base.BaseContext) {
 // ListAllAction
 func (ctrl *FoodController) ListAllAction(ctx *base.BaseContext) {
 
+	r := ctx.Request
+
+	search_key := r.FormValue("search_key")
+
 	menuBO := menu.NewMenuBO(0)
 	ret := make(map[string]interface{}, 0)
 	var retList []menu.MenuBO
@@ -159,6 +163,12 @@ func (ctrl *FoodController) ListAllAction(ctx *base.BaseContext) {
 	if err != nil {
 		ctx.Fail("获取列表失败", nil)
 		return
+	}
+
+	if search_key != "" {
+		searchKeyUtil := &menu.SearchKeyUtil{}
+		retList = searchKeyUtil.Filter(search_key, retList)
+
 	}
 
 	ret["list"] = retList

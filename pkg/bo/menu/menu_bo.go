@@ -132,7 +132,7 @@ func (bo *MenuBO) Query(where string, whereValue []interface{}, pageLimit bgf_bo
 	ret, err = bo.bgfBO.Query(where, whereValue, pageLimit)
 
 	for _, v := range ret {
-		retList = append(retList, v.(MenuBO))
+		retList = append(retList, (v.(MenuBO)))
 	}
 	return
 }
