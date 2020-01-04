@@ -5,7 +5,6 @@
 			 <label for="inputEmail3" class="col-sm-2 control-label">菜单名称</label>
 			<div class="col-sm-10">
 				<input type="text" name="title" class="form-control" id="inputEmail3" />
-				<input type="hidden" name="user_id" value="12345" />
 			</div>
 		</div>
 		
@@ -25,6 +24,15 @@
 				 <button type="submit" class="btn btn-default">提交</button>
 			</div>
 		</div>
+		
+	
+		<div class="form-group">
+			<label for="" class="col-sm-2 control-label">菜单all列表</label>
+			<div class="col-sm-10 "  id="menu_all_list">
+						
+			</div>
+		</div>
+		
 	</form>
 	
 	
@@ -47,6 +55,7 @@ $(function() {
 	},'html');
 	
 	
+	//所有食材
 	$.get(getApiUrl("/food/list_all") , function(data) {
 		var str="";
 		for (i in data["data"]["list"]) {		
@@ -67,7 +76,7 @@ $(function() {
 	},"json");
 	
 	
-	
+	//提交表单
 	$("form.formflag").submit(function() {
 		var url=$("form.formflag").attr("action")
 		var modal_id="modal-container-415722"
@@ -89,8 +98,34 @@ $(function() {
 		return false
 	});
 	
+	//筛选菜单
+		$("#inputEmail3").keyup(function() {
+		var val = $("#inputEmail3").val()
+		$.get(getApiUrl("/menu/list_all")+"&search_key="+val , function(data) {
+			var str="";
+			for (i in data["data"]["list"]) {		
+				str += "<span  class='label label-info '>"+data["data"]["list"][i]["title"]+"</span>&nbsp;&nbsp;";
+			}
+			$("#menu_all_list").html(str);
+		},"json");
+	});
+	$("#inputEmail3").trigger("keyup");
+	
 });
 
 </script>
 
 		
+		
+<style>
+/* menu/list_all?search_key 样式 */
+#menu_all_list span.label-info {
+	
+	display:inline-block;
+
+}
+.food_all_list span.label-info em {
+	color:orange;
+
+}
+</style>

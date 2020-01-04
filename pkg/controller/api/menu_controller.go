@@ -156,8 +156,9 @@ func (ctrl *MenuController) ListAction(ctx *base.BaseContext) {
 }
 
 // ListAllAction 获取所有菜单列表
-func (ctrl *HistoryMenuController) ListAllAction(ctx *base.BaseContext) {
-
+func (ctrl *MenuController) ListAllAction(ctx *base.BaseContext) {
+	r := ctx.Request
+	search_key := r.FormValue("search_key")
 	menuBO := menu.NewMenuBO(0)
 	ret := make(map[string]interface{}, 0)
 	var retList []menu.MenuBO
@@ -167,13 +168,19 @@ func (ctrl *HistoryMenuController) ListAllAction(ctx *base.BaseContext) {
 	whereValue := make([]interface{}, 0)
 	whereValue = append(whereValue, menu.CATEGORY_MENU)
 	pageLimit := bgf_bo.PageLimit{
-		Page:  1,
-		Limit: 2000,
+		Page:      1,
+		Unlimited: 2000,
 	}
 	retList, err = menuBO.Query(where, whereValue, pageLimit)
 	if err != nil {
 		ctx.Fail("获取列表失败", nil)
 		return
+	}
+
+	if search_key != "" {
+		searchKeyUtil := &menu.SearchKeyUtil{}
+		retList = searchKeyUtil.Filter(search_key, retList)
+
 	}
 
 	ret["list"] = retList

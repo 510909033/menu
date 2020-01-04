@@ -61,15 +61,15 @@ $(function() {
 	
 	$("#inputEmail3").keyup(function() {
 		var val = $("#inputEmail3").val()
-		$.get(getApiUrl("/food/list_all?search_key="+val) , function(data) {
-		var str="";
-		for (i in data["data"]["list"]) {		
-			str += "<span  class='label label-default '>"+data["data"]["list"][i]["title"]+"</span>&nbsp;&nbsp;";
-		}
-		$(".food_all_list").html(str);
-	},"json");
+		$.get(getApiUrl("/food/list_all")+"&search_key="+val , function(data) {
+			var str="";
+			for (i in data["data"]["list"]) {		
+				str += "<span  class='label label-info '>"+data["data"]["list"][i]["title"]+"</span>&nbsp;&nbsp;";
+			}
+			$(".food_all_list").html(str);
+		},"json");
 	});
-	
+	$("#inputEmail3").trigger("keyup");
 	
 	
 	
@@ -79,7 +79,13 @@ $(function() {
 
 		
 <style>
-.food_all_list span.label-default em {
+/* food/list_all?search_key 样式 */
+.food_all_list span.label-info {
+	
+	display:inline-block;
+
+}
+.food_all_list span.label-info em {
 	color:orange;
 
 }

@@ -12,9 +12,7 @@
 				<th>
 					菜单列表
 				</th>
-				<th>
-					操作
-				</th>
+		
 			</tr>
 		</thead>
 		<tbody>
@@ -35,7 +33,7 @@ function getDataStart() {
 		var str="";
 		
 		for (i in data["data"]["list"]) {
-			str +="<tr><td>"+data["data"]["list"][i]["id"]+"</td><td>"+data["data"]["list"][i]["what_time_format"]+"</td><td>"+data["data"]["list"][i]["menu_id_list_format"]+"</td><td>Default</td></tr>";
+			str +="<tr><td>"+data["data"]["list"][i]["id"]+"</td><td>"+data["data"]["list"][i]["what_time_format"]+"</td><td>"+data["data"]["list"][i]["menu_id_list_format"]+"</td></tr>";
 		}
 		$("tbody").html(str);
 		

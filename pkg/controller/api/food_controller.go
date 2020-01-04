@@ -156,8 +156,8 @@ func (ctrl *FoodController) ListAllAction(ctx *base.BaseContext) {
 	whereValue := make([]interface{}, 0)
 	whereValue = append(whereValue, menu.CATEGORY_FOOD)
 	pageLimit := bgf_bo.PageLimit{
-		Page:  1,
-		Limit: 2000,
+		Page:      1,
+		Unlimited: 2000,
 	}
 	retList, err = menuBO.Query(where, whereValue, pageLimit)
 	if err != nil {

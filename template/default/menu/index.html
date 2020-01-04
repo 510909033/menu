@@ -167,14 +167,17 @@ function pageHtml(total, pagesize) {
 
 
 function jump(url) {
-	url=getApiUrl(url)
+	//url=getApiUrl(url)
+	url=set_url_param(url, "v",v)
+	url=set_url_param(url, "login_string",login_string)
     location.href = url 
 }
 
 
 function getApiUrl(url) {
-	url=set_url_param(url, "v",v)
-	url=set_url_param(url, "login_string",login_string)
+	//url=set_url_param(url, "v",v)
+	//url=set_url_param(url, "login_string",login_string)
+	url=url+location.search
 	return url
 }
 

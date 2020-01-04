@@ -11,9 +11,7 @@
 				<th>
 					创建时间
 				</th>
-				<th>
-					操作
-				</th>
+		
 			</tr>
 		</thead>
 		<tbody>
@@ -30,11 +28,11 @@ $(function() {
 
 function getDataStart() {
 	
-	$.get(getApiUrl("/food/list") + location.search, function(data) {
+	$.get(getApiUrl("/food/list") , function(data) {
 		var str="";
 		
 		for (i in data["data"]["list"]) {
-			str +="<tr><td>"+data["data"]["list"][i]["id"]+"</td><td>"+data["data"]["list"][i]["title"]+"</td><td>"+data["data"]["list"][i]["create_ts_format"]+"</td><td>Default</td></tr>";
+			str +="<tr><td>"+data["data"]["list"][i]["id"]+"</td><td>"+data["data"]["list"][i]["title"]+"</td><td>"+data["data"]["list"][i]["create_ts_format"]+"</td></tr>";
 		}
 		$("tbody").html(str);
 		

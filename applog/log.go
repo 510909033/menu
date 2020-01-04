@@ -4,6 +4,8 @@ import (
 	"io"
 	"log"
 	"os"
+
+	"baotian0506.com/app/menu/config"
 )
 
 type LEVEL int
@@ -22,12 +24,24 @@ var (
 )
 
 func init() {
-
-	errError, err := os.OpenFile("log_errors.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
-	errInfo, err := os.OpenFile("log_info.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
-	errDebug, err := os.OpenFile("log_debug.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
+	var err error
+	var dir string
+	var errError *os.File
+	var errInfo *os.File
+	var errDebug *os.File
+	dir, err = config.GetLogsDir()
 	if err != nil {
-		log.Fatalln("打开日志文件失败：", err)
+		log.Fatalf("获取日志目录配置信息失败，err=%w", err)
+	}
+
+	if errError, err = os.OpenFile(dir+"log_errors.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666); err != nil {
+		log.Fatalf("打开日志文件失败：err=%w", err)
+	}
+	if errInfo, err = os.OpenFile(dir+"log_info.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666); err != nil {
+		log.Fatalf("打开日志文件失败：err=%w", err)
+	}
+	if errDebug, err = os.OpenFile(dir+"log_debug.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666); err != nil {
+		log.Fatalf("打开日志文件失败：err=%w", err)
 	}
 
 	LogDebug = log.New(io.MultiWriter(os.Stdout, errDebug), "Debug:", log.Ldate|log.Ltime|log.Lshortfile)

@@ -1,10 +1,10 @@
 package config
 
 import (
+	"log"
 	"os"
 	"strings"
 
-	"baotian0506.com/app/menu/applog"
 	"github.com/Unknwon/goconfig"
 )
 
@@ -21,7 +21,7 @@ func init() {
 	var dir string
 
 	if err != nil {
-		applog.LogError.Printf("Getwd fail, err=%w", err)
+		log.Fatalf("Getwd fail, err=%w", err)
 		os.Exit(-1)
 	}
 
@@ -34,12 +34,12 @@ func init() {
 		filename := dir + CONFIG_FILENAME
 		c, err = goconfig.LoadConfigFile(filename) //加载配置文件
 		if err != nil {
-			applog.LogError.Printf("get config file error, filename=%s", filename)
+			log.Fatalf("get config file error, filename=%s", filename)
 			os.Exit(-1)
 		}
 	}
 	if GetDomain() == "" {
-		applog.LogError.Printf("GetDomain return empty")
+		log.Fatalf("GetDomain return empty")
 		os.Exit(-1)
 	}
 }
@@ -77,4 +77,10 @@ func GetMysqConfig() *Mysql {
 	m.Password = password
 
 	return m
+}
+
+func GetLogsDir() (string, error) {
+
+	return c.GetValue("log", "dir")
+
 }

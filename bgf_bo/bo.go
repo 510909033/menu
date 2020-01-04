@@ -17,8 +17,9 @@ func Register(m Model) {
 }
 
 type PageLimit struct {
-	Page  int
-	Limit int
+	Page      int
+	Limit     int
+	Unlimited int
 }
 
 type Where struct {

@@ -52,6 +52,7 @@
 
 $(function() {
 	
+	
 	$.get(getTemplateUrl("/default/menu/plugin/modal.html"), function(data) {
 		$(".modal_position").replaceWith(data);
 	},'html');
@@ -60,7 +61,8 @@ $(function() {
 	    format: 'yyyy-mm-dd hh:ii'
 	});
 	
-	$.get(getApiUrl("/history_menu/list_all"), function(data) {
+	//菜单列表
+	$.get(getApiUrl("/menu/list_all"), function(data) {
 		var str="";
 		for (i in data["data"]["list"]) {		
 			str += "<button type='button' class='btn btn-sm btn_menu_id' style='margin-bottom:3px;'  value='"+data["data"]["list"][i]["id"]+"'>"+ data["data"]["list"][i]["title"] +"</button>&nbsp;&nbsp;";

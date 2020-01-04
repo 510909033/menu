@@ -206,6 +206,10 @@ func (modelMethod *ModelMethod) Query(where string, whereValue []interface{}, li
 	if limit.Limit < 1 || limit.Limit > 1000 {
 		limit.Limit = 10
 	}
+	//如果有unlimit数量，使用unlimit的数量
+	if limit.Unlimited > 0 {
+		limit.Limit = limit.Unlimited
+	}
 
 	whereValue = append(whereValue, (limit.Page-1)*limit.Limit)
 	whereValue = append(whereValue, limit.Limit)
