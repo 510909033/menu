@@ -31,8 +31,8 @@ func main() {
 	//	(&api.WechatController{}).QrcodeAction(nil)
 	//	return
 
-	http.Handle("/default/", http.FileServer(http.Dir("../../template")))
-	http.Handle("/public/", http.FileServer(http.Dir("../../template")))
+	http.Handle("/default/", http.FileServer(http.Dir("template")))
+	http.Handle("/public/", http.FileServer(http.Dir("template")))
 	http.Handle("/js/", http.FileServer(http.Dir("template")))
 
 	h := &myHandler{

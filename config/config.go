@@ -30,7 +30,7 @@ func init() {
 	c, err = goconfig.LoadConfigFile(filename) //加载配置文件
 	if err != nil {
 		dir, err = os.Getwd()
-		dir = strings.TrimRight(dir, `/\`) + "/../../"
+		dir = strings.TrimRight(dir, `/\`) + "/"
 		filename := dir + CONFIG_FILENAME
 		c, err = goconfig.LoadConfigFile(filename) //加载配置文件
 		if err != nil {
