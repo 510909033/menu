@@ -38,6 +38,7 @@ func (ctrl *MenuController) SaveAction(ctx *base.BaseContext) {
 		ctx.Fail("请先登录", nil)
 		return
 	}
+	input.UserId = userId
 
 	if input.Title == "" {
 		ctx.Fail("标题不能为空", nil)
