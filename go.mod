@@ -16,5 +16,3 @@ require (
 	google.golang.org/appengine v1.6.5 // indirect
 
 )
-
-replace github.com/510909033/menu => C:\Users\Administrator\go\src\baotian0506.com\app\menu
