@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	"baotian0506.com/app/menu/bgf_bo"
+	"github.com/510909033/menu/bgf_bo"
 )
 
 func TestInsertSuccessHistoryMenuBO(t *testing.T) {

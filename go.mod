@@ -1,4 +1,4 @@
-module baotian0506.com/app/menu
+module github.com/510909033/menu
 
 go 1.13
 
@@ -11,6 +11,10 @@ require (
 	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/mozillazg/go-pinyin v0.16.0
 	github.com/silenceper/wechat v2.0.1+incompatible
+	github.com/smartystreets/goconvey v1.6.4 // indirect
+	golang.org/x/crypto v0.0.0-20200109152110-61a87790db17 // indirect
 	google.golang.org/appengine v1.6.5 // indirect
 
 )
+
+replace github.com/510909033/menu => C:\Users\Administrator\go\src\baotian0506.com\app\menu

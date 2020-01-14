@@ -4,9 +4,9 @@ import (
 	"context"
 	"net/http"
 
-	"baotian0506.com/app/menu/applog"
-	"baotian0506.com/app/menu/pkg/bo/user"
-	"baotian0506.com/app/menu/sign"
+	"github.com/510909033/menu/applog"
+	"github.com/510909033/menu/pkg/bo/user"
+	"github.com/510909033/menu/sign"
 	"github.com/go-playground/form/v4"
 )
 

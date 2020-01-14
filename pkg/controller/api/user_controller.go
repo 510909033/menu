@@ -7,10 +7,10 @@ import (
 	"strconv"
 	"time"
 
-	"baotian0506.com/app/menu/applog"
-	"baotian0506.com/app/menu/base"
-	"baotian0506.com/app/menu/config"
-	"baotian0506.com/app/menu/sign"
+	"github.com/510909033/menu/applog"
+	"github.com/510909033/menu/base"
+	"github.com/510909033/menu/config"
+	"github.com/510909033/menu/sign"
 )
 
 type UserController struct {

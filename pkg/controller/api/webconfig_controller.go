@@ -1,8 +1,8 @@
 package api
 
 import (
-	"baotian0506.com/app/menu/base"
-	"baotian0506.com/app/menu/pkg/bo/menu"
+	"github.com/510909033/menu/base"
+	"github.com/510909033/menu/pkg/bo/menu"
 )
 
 type WebconfigController struct {

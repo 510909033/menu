@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net/url"
 
-	"baotian0506.com/app/menu/config"
+	"github.com/510909033/menu/config"
 )
 
 func GetUrl(path string, params url.Values) string {

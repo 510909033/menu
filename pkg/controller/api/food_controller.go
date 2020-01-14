@@ -4,11 +4,11 @@ import (
 	"fmt"
 	"strings"
 
-	"baotian0506.com/app/menu/applog"
-	"baotian0506.com/app/menu/base"
-	"baotian0506.com/app/menu/bgf_bo"
-	"baotian0506.com/app/menu/pkg/bo/menu"
-	"baotian0506.com/app/menu/pkg/bo/menu/menu_input"
+	"github.com/510909033/menu/applog"
+	"github.com/510909033/menu/base"
+	"github.com/510909033/menu/bgf_bo"
+	"github.com/510909033/menu/pkg/bo/menu"
+	"github.com/510909033/menu/pkg/bo/menu/menu_input"
 )
 
 type FoodController struct {

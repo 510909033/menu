@@ -6,7 +6,7 @@ import (
 	"strings"
 	"time"
 
-	"baotian0506.com/app/menu/pkg/common"
+	"github.com/510909033/menu/pkg/common"
 )
 
 type HistoryMenuService struct {

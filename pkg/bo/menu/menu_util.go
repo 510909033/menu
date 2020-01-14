@@ -7,7 +7,7 @@ import (
 	"strconv"
 	"time"
 
-	"baotian0506.com/app/menu/applog"
+	"github.com/510909033/menu/applog"
 	_ "github.com/go-sql-driver/mysql"
 )
 

@@ -6,7 +6,7 @@ import (
 	"os"
 	"time"
 
-	"baotian0506.com/app/menu/base"
+	"github.com/510909033/menu/base"
 	"github.com/Unknwon/goconfig"
 	"github.com/kelseyhightower/envconfig"
 )

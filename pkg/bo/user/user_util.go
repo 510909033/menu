@@ -1,6 +1,6 @@
 package user
 
-import "baotian0506.com/app/menu/applog"
+import "github.com/510909033/menu/applog"
 
 type UserUtil struct{}
 
