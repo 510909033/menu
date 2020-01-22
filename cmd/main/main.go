@@ -48,7 +48,7 @@ func main() {
 
 	http.Handle("/", h)
 
-	err := http.ListenAndServe("0.0.0.0:9678", nil)
+	err := http.ListenAndServe("0.0.0.0:9679", nil)
 	applog.LogError.Printf("%v", err)
 }
 
