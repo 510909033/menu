@@ -1,0 +1,19 @@
+run: build
+	cp -rf ./ /var/www/online/menu/
+	-docker container stop online_menu 
+	-docker container rm -f online_menu 
+	cd docker
+	nohup docker-compose -f docker/docker-compose-online.yml up > /dev/null 2>&1 &
+build:
+	go mod tidy
+	rm -rf /var/www/online/menu
+	mkdir -p /var/www/online/menu
+	mkdir -p /var/log/online/menu
+	go build --ldflags "-extldflags -static" -o /var/www/online/menu/go_menu_run cmd/main/main.go
+
+stop:
+	 ps aux|grep "config_online"|grep -v grep|awk '{print $$2}'|xargs kill
+	 echo "stop"
+
+
+

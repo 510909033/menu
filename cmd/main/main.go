@@ -6,6 +6,8 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"os"
+	"path/filepath"
 	"reflect"
 	"strings"
 	"unicode"
@@ -28,12 +30,17 @@ func init() {
 func main() {
 	config.GetDomain() //初始化配置
 
+	var err error
+
 	//	(&api.WechatController{}).QrcodeAction(nil)
 	//	return
+	dir, err := os.Executable()
+	dir = filepath.Dir(dir)
+	dir = strings.TrimRight(dir, `/\`) + "/"
 
-	http.Handle("/default/", http.FileServer(http.Dir("template")))
-	http.Handle("/public/", http.FileServer(http.Dir("template")))
-	http.Handle("/js/", http.FileServer(http.Dir("template")))
+	http.Handle("/default/", http.FileServer(http.Dir(dir+"template")))
+	http.Handle("/public/", http.FileServer(http.Dir(dir+"template")))
+	http.Handle("/js/", http.FileServer(http.Dir(dir+"template")))
 
 	h := &myHandler{
 		action: make(map[string]reflect.Value),
@@ -48,7 +55,7 @@ func main() {
 
 	http.Handle("/", h)
 
-	err := http.ListenAndServe("0.0.0.0:9679", nil)
+	err = http.ListenAndServe("0.0.0.0:9679", nil)
 	applog.LogError.Printf("%v", err)
 }
 

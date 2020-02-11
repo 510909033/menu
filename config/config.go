@@ -1,37 +1,45 @@
 package config
 
 import (
+	"flag"
+	"fmt"
 	"log"
 	"os"
+	"path/filepath"
 	"strings"
 
 	"github.com/Unknwon/goconfig"
 )
 
-const CONFIG_FILENAME = "config.ini"
-
 var c *goconfig.ConfigFile
 
 type Mysql struct {
-	Password string
+	Driver string
 }
 
 func init() {
 	var err error
 	var dir string
+	//configFilename := "config_dev.ini"
+	configFilename1 := flag.String("config", "", "usage configFilename")
+	flag.Parse()
+	fmt.Println(*configFilename1)
+	configFilename := *configFilename1
 
-	if err != nil {
-		log.Fatalf("Getwd fail, err=%w", err)
+	if configFilename == "" {
+		log.Fatalf("configFilename为空")
 		os.Exit(-1)
 	}
 
 	dir = "/root/.menu_config/"
-	filename := dir + CONFIG_FILENAME
+	filename := dir + configFilename
 	c, err = goconfig.LoadConfigFile(filename) //加载配置文件
 	if err != nil {
-		dir, err = os.Getwd()
+		dir, err := os.Executable()
+		dir = filepath.Dir(dir)
+
 		dir = strings.TrimRight(dir, `/\`) + "/"
-		filename := dir + CONFIG_FILENAME
+		filename := dir + configFilename
 		c, err = goconfig.LoadConfigFile(filename) //加载配置文件
 		if err != nil {
 			log.Fatalf("get config file error, filename=%s", filename)
@@ -70,12 +78,10 @@ func GetVersion() string {
 
 	return val
 }
-func GetMysqConfig() *Mysql {
+func GetMysql() *Mysql {
 	m := &Mysql{}
-	password, _ := c.GetValue("mysql", "password")
-
-	m.Password = password
-
+	driver, _ := c.GetValue("mysql", "driver")
+	m.Driver = driver
 	return m
 }
 

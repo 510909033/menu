@@ -1,0 +1,15 @@
+version: "3"
+
+services:
+  online_menu:
+    image: centos:7.6.1810
+    ports:
+      - "9679:9679"
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /var/www/menu:/var/www/menu:rw
+      - /var/log/menu:/var/log/menu:rw
+      - /var/log/menu/config.ini:/config.ini:ro
+        # env_file: env
+    command: /var/www/menu/go_menu_run -config=config_dev.ini
+    container_name: online_menu 

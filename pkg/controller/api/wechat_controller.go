@@ -174,7 +174,7 @@ func (ctrl *WechatController) IndexAction(ctx *base.BaseContext) {
 		}
 
 		//回复消息：演示回复用户发送的消息
-		text := message.NewText(`<a href="http://39.106.133.49:9678/default/menu">菜单列表</a>`)
+		text := message.NewText(`<a href="http://39.106.133.49/default/menu">菜单列表</a>`)
 		return &message.Reply{MsgType: message.MsgTypeText, MsgData: text}
 	})
 

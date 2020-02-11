@@ -21,10 +21,9 @@ func init() {
 	var err error
 	var sqlResult sql.Result
 
-	mysqlConfig := config.GetMysqConfig()
-	password := mysqlConfig.Password
+	mysqlConfig := config.GetMysql()
 
-	db, err = sql.Open("mysql", "root:"+password+"@tcp(172.24.19.102:3306)/menu?charset=utf8mb4")
+	db, err = sql.Open("mysql", mysqlConfig.Driver)
 	if err != nil {
 		applog.LogError.Printf("open db fail, %v", err)
 		panic(err)
