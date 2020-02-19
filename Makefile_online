@@ -1,5 +1,4 @@
 run: build
-	cp -rf ./ /var/www/online/menu/
 	-docker container stop online_menu 
 	-docker container rm -f online_menu 
 	cd docker
@@ -10,6 +9,7 @@ build:
 	mkdir -p /var/www/online/menu
 	mkdir -p /var/log/online/menu
 	go build --ldflags "-extldflags -static" -o /var/www/online/menu/go_menu_run cmd/main/main.go
+	cp -rf ./ /var/www/online/menu/
 
 stop:
 	 ps aux|grep "config_online"|grep -v grep|awk '{print $$2}'|xargs kill

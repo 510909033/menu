@@ -4,7 +4,7 @@ services:
   online_menu:
     image: centos:7.6.1810
     ports:
-      - "9679:9679"
+      - "9681:9679"
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - /var/www/online/menu:/var/www/menu:rw

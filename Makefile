@@ -1,5 +1,4 @@
 run: build
-	cp -rf ./ /var/www/dev/menu/
 	-docker container stop dev_menu 
 	-docker container rm -f dev_menu 
 	cd docker
@@ -10,7 +9,7 @@ build:
 	mkdir -p /var/www/dev/menu
 	mkdir -p /var/log/dev/menu
 	go build --ldflags "-extldflags -static" -o /var/www/dev/menu/go_menu_run cmd/main/main.go
-
+	cp -rf ./ /var/www/dev/menu/
 stop:
 	 ps aux|grep "config_dev"|grep -v grep|awk '{print $$2}'|xargs kill
 	 echo "stop"
