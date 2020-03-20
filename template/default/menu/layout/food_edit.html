@@ -61,7 +61,7 @@ $(function() {
 	
 	$("#inputEmail3").keyup(function() {
 		var val = $("#inputEmail3").val()
-		$.get(getApiUrl("/food/list_all")+"&search_key="+val , function(data) {
+		$.get(getApiUrl("/go_menu/api/food/list_all")+"&search_key="+val , function(data) {
 			var str="";
 			for (i in data["data"]["list"]) {		
 				str += "<span  class='label label-info '>"+data["data"]["list"][i]["title"]+"</span>&nbsp;&nbsp;";

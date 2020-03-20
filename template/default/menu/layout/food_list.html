@@ -28,7 +28,7 @@ $(function() {
 
 function getDataStart() {
 	
-	$.get(getApiUrl("/food/list") , function(data) {
+	$.get(getApiUrl("/go_menu/api/food/list") , function(data) {
 		var str="";
 		
 		for (i in data["data"]["list"]) {

@@ -56,7 +56,7 @@ $(function() {
 	
 	
 	//所有食材
-	$.get(getApiUrl("/food/list_all") , function(data) {
+	$.get(getApiUrl("/go_menu/api/food/list_all") , function(data) {
 		var str="";
 		for (i in data["data"]["list"]) {		
 			str += "<button type='button' class='btn btn-sm btn_menu_id' style='margin-bottom:3px;'  value='"+data["data"]["list"][i]["id"]+"'>"+ data["data"]["list"][i]["title"] +"</button>&nbsp;&nbsp;";
@@ -101,7 +101,7 @@ $(function() {
 	//筛选菜单
 		$("#inputEmail3").keyup(function() {
 		var val = $("#inputEmail3").val()
-		$.get(getApiUrl("/menu/list_all")+"&search_key="+val , function(data) {
+		$.get(getApiUrl("/go_menu/api/menu/list_all")+"&search_key="+val , function(data) {
 			var str="";
 			for (i in data["data"]["list"]) {		
 				str += "<span  class='label label-info '>"+data["data"]["list"][i]["title"]+"</span>&nbsp;&nbsp;";
@@ -124,7 +124,7 @@ $(function() {
 	display:inline-block;
 
 }
-.food_all_list span.label-info em {
+#menu_all_list span.label-info em {
 	color:orange;
 
 }

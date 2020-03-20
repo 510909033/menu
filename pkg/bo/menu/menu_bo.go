@@ -65,7 +65,7 @@ func NewMenuBO(id int) *MenuBO {
 }
 
 func (menu *MenuBO) GetTableName() string {
-	return "menu"
+	return "Menu"
 }
 
 func (menu *MenuBO) GetDBName() string {

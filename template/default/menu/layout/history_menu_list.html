@@ -29,7 +29,7 @@ $(function() {
 });
 
 function getDataStart() {
-	$.get(getApiUrl("/history_menu/list"), function(data) {
+	$.get(getApiUrl("/go_menu/api/history_menu/list"), function(data) {
 		var str="";
 		
 		for (i in data["data"]["list"]) {

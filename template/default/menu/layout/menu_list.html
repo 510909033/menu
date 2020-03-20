@@ -30,7 +30,7 @@ $(function() {
 
 function getDataStart() {
 	
-	$.get(getApiUrl("/menu/list"), function(data) {
+	$.get(getApiUrl("/go_menu/api/menu/list"), function(data) {
 		var str="";
 		
 		for (i in data["data"]["list"]) {

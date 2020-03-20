@@ -8,8 +8,6 @@ import (
 	"net/url"
 	"sort"
 	"strings"
-
-	"github.com/510909033/menu/config"
 )
 
 type SignUtil struct{}
@@ -56,7 +54,8 @@ func (piru *SignUtil) CalcSign(params map[string]string) string {
 }
 
 func (piru *SignUtil) GetSecretKey() string {
-	return config.GetSecret()
+	//return config.GetSecret()
+	return "iambabytreekey!@#$%^&*()"
 }
 
 func (piru *SignUtil) GetLoginString(userUniqid string) string {

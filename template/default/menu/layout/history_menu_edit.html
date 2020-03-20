@@ -62,7 +62,7 @@ $(function() {
 	});
 	
 	//菜单列表
-	$.get(getApiUrl("/menu/list_all"), function(data) {
+	$.get(getApiUrl("/go_menu/api/menu/list_all"), function(data) {
 		var str="";
 		for (i in data["data"]["list"]) {		
 			str += "<button type='button' class='btn btn-sm btn_menu_id' style='margin-bottom:3px;'  value='"+data["data"]["list"][i]["id"]+"'>"+ data["data"]["list"][i]["title"] +"</button>&nbsp;&nbsp;";

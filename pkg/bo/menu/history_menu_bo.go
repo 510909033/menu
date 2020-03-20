@@ -60,7 +60,7 @@ func NewHistoryMenuBO(id int) *HistoryMenuBO {
 }
 
 func (history_menu *HistoryMenuBO) GetTableName() string {
-	return "history_menu"
+	return "HistoryMenu"
 }
 
 func (history_menu *HistoryMenuBO) GetDBName() string {
