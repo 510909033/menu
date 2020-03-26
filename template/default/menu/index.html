@@ -221,7 +221,7 @@ $.get(getTemplateUrl("/default/menu/plugin/daohang.html"), function(data) {
 		$(".data_in_line").html(data)
 	},"html")
 	
-	$.get(getApiUrl("/webconfig/get_menu_list"), function(data) {
+	$.get(getApiUrl("/go_menu/api/webconfig/get_menu_list"), function(data) {
 		var s='<div class="col-md-12 column">'
 		for (var i in data.data) {
 			s +='<span class="label label-info" onclick="jump(\''+data["data"][i]["link"]+'\')">'+data["data"][i]["title"]+'</span> '

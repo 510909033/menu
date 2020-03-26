@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/510909033/bgf_util/boutil"
 	"github.com/510909033/menu/applog"
 	"github.com/510909033/menu/base"
 	"github.com/510909033/menu/bgf_bo"
@@ -22,6 +23,7 @@ func (ctrl *HistoryMenuController) SaveAction(ctx *base.BaseContext) {
 
 	menu_id_list := ctx.Request.FormValue("menu_id_list")
 	what_time := ctx.Request.FormValue("what_time")
+	upload_id_list := ctx.Request.FormValue("upload_id_list")
 
 	userId = ctx.GetUserId()
 	if userId < 1 {
@@ -35,6 +37,10 @@ func (ctrl *HistoryMenuController) SaveAction(ctx *base.BaseContext) {
 	}
 
 	var whatTime int64
+	if what_time == "" && upload_id_list != "" {
+		what_time = time.Now().Format("2006-01-02 15:04")
+	}
+
 	if t, err := time.Parse("2006-01-02 15:04", what_time); err != nil {
 		ctx.Fail("时间必选", nil)
 		return
@@ -47,6 +53,12 @@ func (ctrl *HistoryMenuController) SaveAction(ctx *base.BaseContext) {
 	historyMenuBO.MenuIdList = menu_id_list
 	historyMenuBO.WhatTime = int(whatTime)
 	historyMenuBO.UserId = userId
+	historyMenuBO.Extra, err = boutil.AddExtra(historyMenuBO.Extra, "upload_id_list", upload_id_list)
+
+	if err != nil {
+		ctx.Fail("extra设置失败", nil)
+		return
+	}
 
 	err = historyMenuBO.Save()
 	if err != nil {

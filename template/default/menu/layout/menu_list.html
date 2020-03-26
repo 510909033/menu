@@ -14,6 +14,12 @@
 				<th>
 					食材
 				</th>
+				<th>
+				    来源	
+				</th>
+				<th>
+				    操作
+				</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -35,7 +41,10 @@ function getDataStart() {
 		
 		for (i in data["data"]["list"]) {
 			str +="<tr><td>"+data["data"]["list"][i]["id"]+"</td><td>"+data["data"]["list"][i]["title"]+"</td><td>"+data["data"]["list"][i]["create_ts_format"]+"</td>";
-			str +="<td>"+data["data"]["list"][i]["extra_format"]["menu_id_list"]+"</td></tr>"
+			str +="<td>"+data["data"]["list"][i]["extra_format"]["menu_id_list"]+"</td>";
+			str +="<td>"+data["data"]["list"][i]["extra_format"]["source_type"]+"</td>";
+                str +="<td><a href='"+data["data"]["list"][i]["extra_format"]["view_detail_url"]+"'>详情</a></td>";
+            str +="</tr>";
 		}
 		$("tbody").html(str);
 		
